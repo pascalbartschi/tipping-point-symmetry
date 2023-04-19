@@ -1,0 +1,133 @@
+---
+title: "kableExtra.pdf"
+output: html_document
+date: "2022-10-11"
+mathfont: Arial
+header-includes:
+  - \usepackage{amsmath}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting a nice table for parameterset
+
+```{r source, include = FALSE}
+
+library(tidyverse)
+library(microxanox)
+library(tinytex)
+library(kableExtra)
+
+source("C:/Users/paesc/OneDrive/Dokumente/BSc_UZH/UZH_22HS/BIO357_Research_Internship/microxanox/sym_microxanox/Explore_ASS/sym_functions.R")
+
+```
+
+
+```{r param}
+
+wait_time <- 10 # time spent at each step
+num_strains <- 1 # number of strains per group
+event_interval <- 10
+
+## oxygen diffusivity equal to sulfate diffusivity means perfect symmetry
+## oxygen diffusivity time series: rep(8e-2, 4), , 10 ^ c(rep(-8, 5),rep(0,5),rep(-8, 5))
+
+
+
+log10a_series <- seq(3, -5, length = 10) # symmetry axis at -1, +- 4 units in both direction
+
+
+num_CB_strains <- num_strains
+num_SB_strains <- num_strains
+num_PB_strains <- num_strains
+
+sp <- new_strain_parameter(
+  n_CB = num_CB_strains,
+  values_CB = "symmetric",
+  n_PB = num_SB_strains,
+  values_PB = "symmetric",
+  n_SB = num_PB_strains,
+  values_SB = "symmetric",
+  values_other  = "symmetric",
+  values_initial_state = "symmetric"
+  
+)
+
+parameter <- new_runsim_parameter(
+  dynamic_model = bushplus_dynamic_model,  # look up name
+  event_definition = event_definition_2,       
+  event_interval = event_interval,
+  noise_sigma = 0,
+  minimum_abundances = c(1, 0 , 1),       # PB stays 0
+  strain_parameter = sp,
+  log10a_series =  log10a_series
+)
+
+names(parameter$minimum_abundances) <- c("CB", "PB", "SB")
+rm(sp)
+parameter$sim_duration <- wait_time * length(parameter$log10a_series)
+parameter$sim_sample_interval <- wait_time  # to avoid having negitive ODE results
+
+```
+
+
+```{r strings}
+
+# $math format acitvation$, every \\ activates some function inside $$ only needed once -> \\mathrm{} removes italics
+
+Parameter <- c('$\\mathrm{g_{max}}$',
+               '$\\mathrm{k_{B,P}}$',
+               "$\\mathrm{h_{B,S}}$",
+               "$\\mathrm{y^{B}_{P}}$",
+               "$\\mathrm{p_{B}}$",
+               "$\\mathrm{m_{B}}$",
+               "$\\mathrm{a_{SR}}$",
+               "$\\mathrm{a_{P}}$",
+               "$\\mathrm{S_{b}}$",
+               "$\\mathrm{P_{b}}$",
+               "$\\mathrm{c}$")
+
+Meaning <- c("Maximum specific growth rate of CB and SB",
+             "Half-saturation constant of CB and SB on phosphorus",
+             "Half-inhibition constant of CB/SB on reduced sulfur/oxygen",
+             "Yield of CB and SB on phosphorus",
+             "Production of oxygen/reduced sulfur per CB/SB cell","mortalilty rate of CB and SB",
+             "Diffusivity of reduced sulfur",
+             "Diffusivity of phosphorus",
+             "Background concentration substrates",
+             "Background concentration of phosphorus", 
+             "Oxidation rate of reduced sulfur")
+
+# todo change units
+
+Value <- c(paste(parameter$strain_parameter$CB$g_max, "$\\mathrm{hr^{-1}}$"),
+           paste(parameter$strain_parameter$CB$k_CB_P, "$\\mathrm{\\mu M}$"),
+           paste(parameter$strain_parameter$CB$h_SR_CB, "$\\mathrm{\\mu M}$"),
+           paste(parameter$strain_parameter$CB$y_P_CB, "cells $\\mathrm{\\mu M^{-1}}$"),
+           paste(parameter$strain_parameter$CB$Pr_CB, "$\\mathrm{\\mu M cell^{-1}}$"),
+           paste(parameter$strain_parameter$CB$m_CB, "$\\mathrm{hr^{-1}}$"),
+           paste(parameter$strain_parameter$a_S, "$\\mathrm{hr^{-1}}$"),
+           paste(parameter$strain_parameter$a_P, "$\\mathrm{hr^{-1}}$"),
+           paste(parameter$strain_parameter$back_O, "$\\mathrm{\\mu M}$"),
+           paste(parameter$strain_parameter$back_P, "$\\mathrm{\\mu M}$"),
+           paste(parameter$strain_parameter$c, "$\\mathrm{\\mu M^{-1} hr^{-1}}$"))
+           
+
+frame <- data.frame(Parameter, Meaning, Value)
+
+         
+```
+
+
+```{r ,results = 'asis', escape = FALSE}
+kable(frame, booktabs = TRUE) %>%
+  kable_styling(latex_options = "scale_down") %>%
+  row_spec(0, bold = TRUE, font_size = 16) %>%
+  row_spec(1:11, bold = TRUE, font_size = 12, hline_after = FALSE) %>%
+  # row_spec(c(1:6, 9, 10), color = "green") %>%
+  row_spec(c(7:11), color = "red")
+  # add_footnote(c("B: Bacteria, same value for cyanobacteria and sulfur reducing bacteria", "S: Substrate, same value for reduced sulfur and oxygen"), notation = "none") # notation = alphabet
+```
+
