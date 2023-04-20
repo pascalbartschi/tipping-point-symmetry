@@ -7,14 +7,14 @@ options(mc.cores = num_cores)
 # load the packages
 source("simulation_scripts/read_microxanox.R")
 
-# seperate directiory
+# define a wait_time = sample interval
+wait_time <- 1e2
 
+# seperate directiory
 if (!dir.exists(here::here("simulation_scripts/experiments_RDS"))){
   dir.create("simulation_scripts/experiments_RDS")
 }
 
-# define a wait_time = sample interval
-wait_time <- 1e2
 
 # experiment 1: temporal method
 source("simulation_scripts/setup_sym_experiment_temporal.R")
@@ -30,7 +30,7 @@ rm(parameter)
 
 # experiment 3: bush reproduction
 source("simulation_scripts/setup_bush_experiment.R")
-res3 <- run_simulation_symmetric(parameter)
+res3 <- run_temporal_ssfind(parameter)
 saveRDS(res3, "simulation_scripts/experiments_RDS/symmetric_simulation_bush_temporal.RDS")
 rm(parameter)
 
