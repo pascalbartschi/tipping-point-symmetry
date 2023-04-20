@@ -1,0 +1,24 @@
+# experiments
+
+num_cores <- 26
+# use of multiple cores
+options(mc.cores = num_cores) 
+
+# load the packages
+source("simulation_scripts/read_microxanox.R")
+
+ # seperate directiory
+
+if (!dir.exists(here::here("experiments_RDS"))){
+  dir.create("experiments_RDS")
+}
+
+ # define a wait_time = sample interval
+wait_time <- 1e2
+
+# experiment 1: temporal method
+source("simulation_scripts/setup_sym_experiment_temporal.R")
+res1 <- run_temporal_ssfind_symmetric(parameter)
+saveRDS("simulation_scripts/experiments_RDS")
+
+

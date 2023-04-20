@@ -30,9 +30,9 @@ sp <- new_strain_parameter(
   
 )
 
-parameter <- sym_new_runsim_parameter(
-  dynamic_model = sym_bushplus_dynamic_model,  
-  event_definition = sym_event_definition_2,       
+parameter <- new_runsim_parameter(
+  dynamic_model = symmetric_bushplus_dynamic_model,  
+  event_definition = event_definition_symmetric,       
   event_interval = event_interval,
   noise_sigma = 0,
   minimum_abundances = c(1, 0 , 1),       # PB stays 0
