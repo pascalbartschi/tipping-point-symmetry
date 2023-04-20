@@ -12,7 +12,7 @@ start_aS <- -0.75
 
 
 log10a_series <- c(seq(start_aO, start_aS, length = steps), 
-                   rep(start_aO, times = 10),
+                   rep(start_aS, times = 10),
                    seq(start_aS, start_aO, length = steps))
 
 
