@@ -1,0 +1,225 @@
+---
+title: "Research_Questions"
+author: "Pascal"
+date: "2023-02-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# What Research Questions may be of interest
+
+### libraries
+
+```{r include=FALSE}
+library(tidyverse)
+library(microxanox)
+source("sym_functions.R")
+```
+
+### initiate some parameterset
+
+```{r}
+
+wait_time <- 10 # time spent at each step
+num_strains <- 1 # number of strains per group
+event_interval <- 10
+
+## oxygen diffusivity equal to sulfate diffusivity means perfect symmetry
+## oxygen diffusivity time series: rep(8e-2, 4), , 10 ^ c(rep(-8, 5),rep(0,5),rep(-8, 5))
+
+# a_S at 0.125
+
+log10a_series <- seq(-2, 0, length = 1e3) # symmetry axis at -1, +- 4 units in both direction
+# log10aS_series <- seq(-5, 3, length = 10)
+
+
+
+num_CB_strains <- num_strains
+num_SB_strains <- num_strains
+num_PB_strains <- num_strains
+
+sp <- new_strain_parameter(
+  n_CB = num_CB_strains,
+  values_CB = "symmetric",
+  n_PB = num_SB_strains,
+  values_PB = "symmetric",
+  n_SB = num_PB_strains,
+  values_SB = "symmetric",
+  values_other  = "symmetric",
+  values_initial_state = "symmetric"
+  
+)
+
+parameter <- sym_new_runsim_parameter(
+  dynamic_model = sym_bushplus_dynamic_model,  
+  event_definition = sym_event_definition_2,       
+  event_interval = event_interval,
+  noise_sigma = 0,
+  minimum_abundances = c(1, 0 , 1),       # PB stays 0
+  strain_parameter = sp,
+  log10a_series =  log10a_series,
+  sym_axis = -1
+)
+
+names(parameter$minimum_abundances) <- c("CB", "PB", "SB")
+rm(sp)
+parameter$sim_duration <- wait_time * length(parameter$log10a_series)
+parameter$sim_sample_interval <- wait_time  # to avoid having negative ODE results
+
+```
+
+## Different trajectories if asymmetry arises ?
+
+### Symmetric response
+
+```{r}
+path <- file.path("sym_explore", "trait_sym.RDS")
+sym_res <- sym_run_temporal_ssfind(parameter)
+saveRDS(sym_res, path)
+```
+
+```{r}
+sym_res <- readRDS(path)
+sym_plot_temporal_ss(sym_res)
+
+```
+
+### asymmetry: growth rate
+
+```{r}
+path <- file.path("sym_explore", "trait_growth.RDS")
+# expected: CB become stronger
+parameter$strain_parameter$CB$g_max_CB <- 0.13 # increase growth rate of one group  # 0.13 works, factor = 1.3
+sym_res <- sym_run_temporal_ssfind(parameter)
+saveRDS(sym_res, path)
+parameter$strain_parameter$CB$g_max_CB <- 0.1 # set back to initial rate
+```
+
+```{r}
+sym_res <- readRDS(path)
+sym_plot_temporal_ss(sym_res)
+
+```
+-> CB stronger growth -> harder recovery for SB
+
+### asymmetry: half saturation constant of cells on phosphorus
+
+```{r}
+path <- file.path("sym_explore", "trait_SC50.P.RDS")
+# expected: Cb get weaker, as they need more nutrient for growth
+parameter$strain_parameter$CB$k_CB_P <- 0.8 # increase yield of one group
+sym_res <- sym_run_temporal_ssfind(parameter)
+saveRDS(sym_res, path)
+parameter$strain_parameter$CB$k_CB_P <- 0.5 # set back to initial set
+
+```
+
+```{r}
+sym_res <- readRDS(path)
+sym_plot_temporal_ss(sym_res)
+
+```
+-> CB need more phosphorus for growth: lighter recovery for SB
+
+
+### asymmetry: inhibition rate
+
+```{r}
+# expected: CB stronger, as SB substrate has lower toxicity
+parameter$strain_parameter$CB$h_SR_CB <- 150 # increase: SR has lower toxicity
+
+sym_res <- sym_run_temporal_ssfind(parameter)
+sym_plot_temporal_ss(sym_res)
+
+parameter$strain_parameter$CB$h_SR_CB <- 100
+
+```
+-> CB need more toxin for same effect: SB recovery hardened
+
+
+### asymmetry: cell-yield upon phosphorus
+
+```{r}
+# expected: CB advantage yield more cells per unit phosphorus
+parameter$strain_parameter$CB$y_P_CB <- 1.67e+08 * 1.5 # increase dead CB yield more P than SB
+
+sym_res <- sym_run_temporal_ssfind(parameter)
+sym_plot_temporal_ss(sym_res)
+
+parameter$strain_parameter$CB$y_P_CB <-1.67e+08
+
+```
+-> SB recovery hardened
+
+### asymmetry: yield of inhibitory substrate per cell
+
+```{r}
+# expected: CB advantage
+parameter$strain_parameter$CB$Pr_CB <- 3e-08 * 3 # increase growth rate of one group
+
+sym_res <- sym_run_temporal_ssfind(parameter)
+sym_plot_temporal_ss(sym_res)
+
+parameter$strain_parameter$CB$Pr_CB <- 3e-08
+
+```
+-> SB recovery is hardened
+
+### asymmetry: mortality rate
+
+```{r}
+# expected: Sb advantage
+parameter$strain_parameter$CB$m_CB <- 0.05 # increase growth rate of one group
+
+sym_res <- sym_run_temporal_ssfind(parameter)
+sym_plot_temporal_ss(sym_res)
+
+parameter$strain_parameter$CB$m_CB <- 0.04
+
+```
+
+
+### asymmetry: immigration rate
+
+```{r}
+# expected: Sb advantage
+parameter$strain_parameter$CB$i_CB <- 10 # increase growth rate of one group
+
+sym_res <- sym_run_temporal_ssfind(parameter)
+sym_plot_temporal_ss(sym_res)
+
+parameter$strain_parameter$CB$i_CB <- 0
+
+```
+
+
+
+## effect of immigration on response -> doesn't work in model
+
+```{r}
+# expected: Sb advantage
+parameter$strain_parameter$CB$i_CB <- parameter$strain_parameter$SB$i_SB <- 100 # increase immigration
+sym_res <- sym_run_temporal_ssfind(parameter)
+sym_plot_temporal_ss(sym_res)
+
+parameter$strain_parameter$CB$i_CB <- parameter$strain_parameter$SB$i_SB <- 0
+
+```
+
+
+
+## effect of turnover rate
+
+```{r}
+# expected: Sb advantage
+parameter$strain_parameter$c <- 1   # alter turnover
+sym_res <- sym_run_temporal_ssfind(parameter)
+sym_plot_temporal_ss(sym_res)
+
+parameter$strain_parameter$c <- 0.01
+
+```
+
