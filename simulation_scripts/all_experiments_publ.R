@@ -1,0 +1,42 @@
+# experiments
+
+num_cores <- 26
+# use of multiple cores
+options(mc.cores = num_cores) 
+
+# load the packages
+source("simulation_scripts/read_microxanox.R")
+
+ # seperate directiory
+
+if (!dir.exists(here::here("simulation_scripts/experiments_RDS"))){
+  dir.create("simulation_scripts/experiments_RDS")
+}
+
+ # define a wait_time = sample interval
+wait_time <- 1e2
+
+# experiment 1: temporal method
+source("simulation_scripts/setup_sym_experiment_temporal.R")
+res1 <- run_temporal_ssfind_symmetric(parameter)
+saveRDS(res1, "simulation_scripts/experiments_RDS/symmetric_simulation_symmetric_temporal.RDS")
+rm(parameter)
+
+# experiment 2: time dynamics
+source("simulation_scripts/setup_sym_experiment_timedynamics.R")
+res2 <- run_simulation_symmetric(parameter)
+saveRDS(res2, "simulation_scripts/experiments_RDS/symmetric_simulation_time_dynamics.RDS")
+rm(parameter)
+
+# experiment 3: bush reproduction
+source("simulation_scripts/setup_bush_experiment.R")
+res3 <- run_simulation_symmetric(parameter)
+saveRDS(res3, "simulation_scripts/experiments_RDS/symmetric_simulation_bush_temporal.RDS")
+rm(parameter)
+
+
+
+
+
+
+
