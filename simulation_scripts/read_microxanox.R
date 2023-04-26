@@ -3,6 +3,9 @@
 # load other libraries
 library(tidyverse)
 library(here)
+library(DescTools)
+library(ggpubr)
+library(microxanox)
 
 # load files from neigbour dir
 for (f in list.files("../symmetry_microxanox/Symicroxanox/R")){
