@@ -1,6 +1,6 @@
-# experiments
+√# experiments
 
-num_cores <- 26
+num_cores <- 30
 # use of multiple cores
 options(mc.cores = num_cores) 
 
@@ -8,11 +8,12 @@ options(mc.cores = num_cores)
 source("simulation_scripts/read_microxanox.R")
 
 # define a wait_time = sample interval
-wait_time <- 1e2
+wait_time <- 1e6
 
 # seperate directiory
-if (!dir.exists(here::here("simulation_scripts/experiments_RDS"))){
-  dir.create("simulation_scripts/experiments_RDS")
+folder_path <- paste0("simulation_scripts/experiments_RDS_wt", wait_time)
+if (!dir.exists(here::here(folder_path))){
+  dir.create(folder_path)
 }
 
 
@@ -31,7 +32,7 @@ rm(parameter)
 # experiment 3: bush reproduction
 source("simulation_scripts/setup_bush_experiment.R")
 res3 <- run_temporal_ssfind(parameter)
-saveRDS(res3, "simulation_scripts/experiments_RDS/symmetric_simulation_bush_temporal.RDS")
+saveRDS(res3, "simulation_scripts/experiments_RDS/asymmetric_simulation_bush_temporal.RDS")
 rm(parameter)
 
 
