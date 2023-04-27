@@ -1,4 +1,7 @@
-# experiments
+# experiments of the 
+# - temporal method in symmetry
+# - time dynamics in symmetry
+# - reproduction of bush results with temporal method
 
 num_cores <- 30
 # use of multiple cores
@@ -38,8 +41,6 @@ res3 <- run_temporal_ssfind(parameter)
 saveRDS(res3, paste0(folder_path, "/simulation_bush_temporal.RDS"))
 rm(parameter)
 
-
-# dont forget to upate local script!
 
 
 
