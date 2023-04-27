@@ -1,4 +1,4 @@
-# asymmetry experiments experiments 
+# trait asymmetry experiments
 
 num_cores <- 30
 # use of multiple cores

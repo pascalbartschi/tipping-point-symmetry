@@ -38,7 +38,7 @@ parameter <- new_runsim_parameter(
   minimum_abundances = c(1, 0 , 1),       # PB stays 0
   strain_parameter = sp,
   log10a_series =  log10a_series,
-  sym_axis = -1
+  asym_factor = 1
 )
 
 names(parameter$minimum_abundances) <- c("CB", "PB", "SB")
