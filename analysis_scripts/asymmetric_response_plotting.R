@@ -11,42 +11,64 @@ theme_set(
         # axis.ticks.y = element_blank(),
         axis.text = element_text(family = "Arial", size = 5),
         # axis.text.y = element_blank(),
-        panel.grid.major  = element_line(linewidth = 0.3,
+        panel.grid  = element_line(linewidth = 0.3,
                                          linetype = "dashed",
                                          color = "#dedddd"),
         panel.background = element_blank(),
-        axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
-                                                       ends = "both")),
-        axis.line.y = element_line(),
+        # axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
+        #                                                ends = "both")),
+        #axis.line.y = element_line(),
         # axis.line.y = element_line(arrow = grid::arrow(length = unit(0.3, "cm"), 
         #                                                ends = "last")),
+        panel.border = element_rect(fill = NA, linewidth = 0.3),
         legend.position = "none") 
 )
 
+# control the plot properties
+sz = 4
+lw = 2
 ### plot gmax
 ## shifts
 ggplot(data = asym_measures$gmaxS %>% filter(species_type == "substrate")) + 
-  geom_point(aes(x = abs(asym_val - sym_val), y = shift, shape = shift_type, color = species), size = 4) + 
+  geom_point(aes(x = abs(asym_val - sym_val), y = shift, shape = shift_type, color = species), size = sz) + 
+  geom_point(aes(x = 0, y = shift_sym, shape = shift_type), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
   labs(x = "Delta gmax values")
 
 ## hysteresis area
 ggplot(data = asym_measures$gmaxS %>% filter(species_type == "substrate")) + 
-  geom_point(aes(x = abs(asym_val - sym_val), y = hyst_area, color = species), size = 4) + 
+  geom_point(aes(x = abs(asym_val - sym_val), y = hyst_area, color = species), size = sz) + 
+  geom_point(aes(x = 0, y = hyst_area_sym), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
   labs(x = "Delta gmax values")
 
 ### plot hOSB
 ## shifts
 ggplot(data = asym_measures$hOSB %>% filter(species_type == "substrate")) + 
-  geom_point(aes(x = abs(asym_val - sym_val), y = shift, shape = shift_type, color = species), size = 4) + 
-  labs(x = "Delta hOSB values")
+  geom_point(aes(x = abs(asym_val - sym_val), y = shift, shape = shift_type, color = species), size = sz) + 
+  geom_point(aes(x = 0, y = shift_sym, shape = shift_type), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  labs(x = "Delta h_O_SB values")
 
 ## hysteresis area
 ggplot(data = asym_measures$hOSB %>% filter(species_type == "substrate")) + 
-  geom_point(aes(x = abs(asym_val - sym_val), y = hyst_area, color = species), size = 4) + 
-  labs(x = "Delta hOSB values")
+  geom_point(aes(x = abs(asym_val - sym_val), y = hyst_area, color = species), size = sz) + 
+  geom_point(aes(x = 0, y = hyst_area_sym), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  labs(x = "Delta h_O_SB values")
 
 ### plot stressor
 ## shifts
 ggplot(data = asym_measures$stressor %>% filter(species_type == "substrate")) + 
-  geom_point(aes(x = abs(asym_val - sym_val), y = shift, shape = shift_type, color = species), size = 4) + 
-  labs(x = "Delta asym factor")
+  geom_point(aes(x = abs(asym_val - sym_val), y = shift, shape = shift_type, color = species), size = sz) + 
+  geom_point(aes(x = 0, y = shift_sym, shape = shift_type), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  labs(x = "Delta gmax values")
+
+## hysteresis area
+ggplot(data = asym_measures$stressor %>% filter(species_type == "substrate")) + 
+  geom_point(aes(x = abs(asym_val - sym_val), y = hyst_area, color = species), size = sz) + 
+  geom_point(aes(x = 0, y = hyst_area_sym), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  labs(x = "Delta gmax values")
+
