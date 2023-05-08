@@ -23,6 +23,7 @@ gc(full = TRUE)
 # import the symmetric parameterset
 source("simulation_scripts/setup_sym_experiment_temporal.R")
 parameter$log10a_series <- seq(-2, 0,length = 300)
+parameter <- update_asym_factor(parameter)
 # decrease growth rates of sulfur-reducing bacteria (anoxic state is expected to undesirable)
 g.rates_max <- seq(0.09, 0.06, by = -0.01)
 for (g_max in g.rates_max){
@@ -38,6 +39,7 @@ for (g_max in g.rates_max){
 # import the symmetric parameterset
 source("simulation_scripts/setup_sym_experiment_temporal.R")
 parameter$log10a_series <- seq(-2, 0,length = 300)
+parameter <- update_asym_factor(parameter)
 # decrease half inhibtion constant of oxygen on sulfur-reducing bacteria (anoxic state is expected to undesirable)
 inhib.rates <- seq(90, 60 ,by = -10)
 for (h_O_SB in inhib.rates){
