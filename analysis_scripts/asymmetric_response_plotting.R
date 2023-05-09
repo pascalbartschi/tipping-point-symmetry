@@ -41,21 +41,29 @@ ggplot(data = asym_measures$gmaxS %>% filter(species_type == "substrate")) +
   geom_point(aes(x = (asym_val - sym_val), y = hyst_area, color = species), size = sz) + 
   geom_point(aes(x = 0, y = hyst_area_sym), size = sz, color = "#7E3C2F") +
   scale_color_manual(values = c("#00BD54", "#FF0000")) +
-  labs(title = "gmax, hysteresis area", x = "Delta gmax values")
+  labs(title = "SB gmax, hysteresis area", x = "Delta gmax values")
 
 ## hysteresis range
 ggplot(data = asym_measures$gmaxS %>% filter(species_type == "substrate")) + 
   geom_point(aes(x = (asym_val - sym_val), y = hyst_range, color = species), size = sz) + 
   geom_point(aes(x = 0, y = hyst_range_sym), size = sz, color = "#7E3C2F") +
   scale_color_manual(values = c("#00BD54", "#FF0000")) +
-  labs(title = "gmax, range", x = "Delta gmax values")
+  labs(title = "SB gmax, range", x = "Delta gmax values")
 
 ## tipping point delta
-ggplot(data = asym_measures$gmaxS %>% filter(species_type == "substrate")) + 
-  geom_point(aes(x = (asym_val - sym_val), y = hyst_range, color = species), size = sz) + 
-  geom_point(aes(x = 0, y = hyst_range_sym), size = sz, color = "#7E3C2F") +
-  scale_color_manual(values = c("#00BD54", "#FF0000")) +
-  labs(title = "gmax, range", x = "Delta gmax values")
+asym_measures$gmaxS %>% 
+  filter(species_type == "substrate") %>% 
+  select(contains("TP"), asym_val, sym_val) %>%
+  mutate(anox_TP_delta = anox_TP_sym - anox_TP, 
+         ox_TP_delta = ox_TP_sym - ox_TP) %>%
+  select(ends_with("delta"), asym_val, sym_val) %>%
+  gather(key = "delta_TP_type", value = "delta_TP_value", -c(asym_val, sym_val)) %>%
+
+  ggplot() + 
+    geom_point(aes(x = (asym_val - sym_val), y = delta_TP_value, color = delta_TP_type), size = sz) + 
+    geom_point(aes(x = 0, y = 0), size = sz, color = "#7E3C2F") +
+    scale_color_manual(values = c("#FF0000", "#00BD54")) +
+    labs(title = "SB gmax, TP_delta", x = "Delta TP values")
 
 
 
@@ -81,6 +89,21 @@ ggplot(data = asym_measures$hOSB %>% filter(species_type == "substrate")) +
   scale_color_manual(values = c("#00BD54", "#FF0000")) +
   labs(title = "hOSB, range", x = "Delta gmax values")
 
+## tipping point delta
+asym_measures$hOSB %>% 
+  filter(species_type == "substrate") %>% 
+  select(contains("TP"), asym_val, sym_val) %>%
+  mutate(anox_TP_delta = anox_TP_sym - anox_TP, 
+         ox_TP_delta = ox_TP_sym - ox_TP) %>%
+  select(ends_with("delta"), asym_val, sym_val) %>%
+  gather(key = "delta_TP_type", value = "delta_TP_value", -c(asym_val, sym_val)) %>%
+  
+  ggplot() + 
+  geom_point(aes(x = (asym_val - sym_val), y = delta_TP_value, color = delta_TP_type), size = sz) + 
+  geom_point(aes(x = 0, y = 0), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#FF0000", "#00BD54")) +
+  labs(title = "hOSB, TP_delta", x = "Delta TP values")
+
 ### plot stressor
 ## shifts
 ggplot(data = asym_measures$stressor %>% filter(species_type == "substrate")) + 
@@ -102,4 +125,19 @@ ggplot(data = asym_measures$stressor %>% filter(species_type == "substrate")) +
   geom_point(aes(x = 0, y = hyst_range_sym), size = sz, color = "#7E3C2F") +
   scale_color_manual(values = c("#00BD54", "#FF0000")) +
   labs(title = "stressor, range", x = "Delta gmax values")
+
+## tipping point delta
+asym_measures$stressor %>% 
+  filter(species_type == "substrate") %>% 
+  select(contains("TP"), asym_val, sym_val) %>%
+  mutate(anox_TP_delta = anox_TP_sym - anox_TP, 
+         ox_TP_delta = ox_TP_sym - ox_TP) %>%
+  select(ends_with("delta"), asym_val, sym_val) %>%
+  gather(key = "delta_TP_type", value = "delta_TP_value", -c(asym_val, sym_val)) %>%
+  
+  ggplot() + 
+  geom_point(aes(x = (asym_val - sym_val), y = delta_TP_value, color = delta_TP_type), size = sz) + 
+  geom_point(aes(x = 0, y = 0), size = sz, color = "#7E3C2F") +
+  scale_color_manual(values = c("#FF0000", "#00BD54")) +
+  labs(title = "stressor, TP_delta", x = "Delta TP values")
 
