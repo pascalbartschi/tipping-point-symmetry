@@ -6,3 +6,5 @@ figures
 .DS_Store
 .DS_Store
 simulation_scripts/.DS_Store
+*.RDS
+simulation_scripts/.DS_Store

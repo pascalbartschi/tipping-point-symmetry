@@ -40,10 +40,14 @@ for (i in 1:length(files)) {
                           "shift_type" = rep(c("recovery", "collapse"), each = nrowlen/2),
                           "hyst_area" = rep(tm$hyst_area[1:(nrowlen/2)], times = nrowlen/4),
                           "hyst_range" = rep(tm$hyst_range[1:(nrowlen/2)], times = nrowlen/4),
+                          "anox_TP" = rep(tm$anox_TP[1:(nrowlen/2)], times = nrowlen/4),
+                          "ox_TP" = rep(tm$ox_TP[1:(nrowlen/2)], times = nrowlen/4),
                           "asym_val" = rep(as.numeric(str_extract_all(filename, "[-+]?\\d*\\.?\\d+")[[1]]), times = nrowlen),
                           "shift_sym" = c(bm$abs_shift_recovery[1:(nrowlen/2)], bm$abs_shift_catastrophy[1:(nrowlen/2)]), 
                           "hyst_area_sym" = rep(bm$hyst_area[1:(nrowlen/2)], times = nrowlen/4),
                           "hyst_range_sym" = rep(bm$hyst_range[1:(nrowlen/2)], times = nrowlen/4),
+                          "anox_TP_sym" = rep(bm$anox_TP[1:(nrowlen/2)], times = nrowlen/4),
+                          "ox_TP_sym" = rep(bm$ox_TP[1:(nrowlen/2)], times = nrowlen/4),
                           "sym_val" = rep(baseline_vals[i], times = nrowlen))
     asym_measures[[i]] <- rbind(newrows, asym_measures[[i]])
   }
