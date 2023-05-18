@@ -65,8 +65,30 @@ asym_measures$gmaxS %>%
     labs(title = "SB gmax, TP_delta", x = "Delta TP values")
 
 # measurement for total shift for one direction of environmental change
-asym_measures %>%
-  filter
+# add up the recovery shifts of SR and collapse shifts of O for instance
+cbind(rbind(asym_measures$gmaxS %>% 
+              filter(species_type == "substrate", species == "SR", shift_type == "recovery") %>%
+              select(-c(species_type, hyst_area, hyst_range, hyst_area_sym, hyst_range_sym)),
+            asym_measures$gmaxS %>% 
+              filter(species_type == "substrate", species == "SR", shift_type == "collapse") %>%
+              select(-c(species_type, hyst_area, hyst_range, hyst_area_sym, hyst_range_sym))) %>%
+        rename(SR_shift = shift, SR_shift_type = shift_type),
+      rbind(asym_measures$gmaxS %>% 
+              filter(species_type == "substrate", species == "O", shift_type == "collapse") %>%
+              select(c(shift, shift_type, species)),
+            asym_measures$gmaxS %>% 
+              filter(species_type == "substrate", species == "O", shift_type == "recovery") %>%
+              select(c(shift, shift_type, species))) %>%
+        rename(O_shift = shift, O_shift_type = shift_type)) %>%
+  select(-species) %>%
+  mutate(total_shift = O_shift + SR_shift, 
+         total_shift_to = ifelse(SR_shift_type == "recovery", "anoxic", "oxic"), 
+         total_shift_sym = sum(shift_sym) / (nrow(.)/2)) %>% 
+  ggplot()+
+    geom_point(aes(x = (asym_val - sym_val), y = total_shift, color = total_shift_to)) + 
+    geom_point(aes(x = 0, y = total_shift_sym), color = "#7E3C2F")  + 
+    scale_color_manual(values = c("#FF0000", "#00BD54")) +
+    labs(title = "gmax, total shifts", x = "Delta gmax values")
 
 
 
