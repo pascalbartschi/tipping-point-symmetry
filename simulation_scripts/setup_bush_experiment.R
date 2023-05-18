@@ -24,7 +24,7 @@ parameter <- new_runsim_parameter(
 
 names(parameter$minimum_abundances) <- c("CB", "PB", "SB")
 # rm(sp)
-# parameter$strain_parameter$initial_state["CB_1"] <- 1e8
+parameter$strain_parameter$initial_state["CB_1"] <- 1e8
 
 parameter$sim_duration <- wait_time * length(parameter$log10a_series)
 parameter$sim_sample_interval <- wait_time  # to avoid having negative ODE results
