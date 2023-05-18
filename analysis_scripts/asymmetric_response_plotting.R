@@ -31,6 +31,9 @@ plot_asymmetric_response <- function(asym_measures,
                                      lw = 4,
                                      pprint = TRUE
                                      ){
+  if (!(index %in% names(asym_measures))){
+    stop("Please input subject contained in list asym_measures. Call names(asym_measures) to check available subjects.")
+    }
   # search for index
   index = which(subject == names(asym_measures))
   # individual shifts
