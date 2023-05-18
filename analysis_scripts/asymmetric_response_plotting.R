@@ -58,12 +58,15 @@ asym_measures$gmaxS %>%
          ox_TP_delta = ox_TP_sym - ox_TP) %>%
   select(ends_with("delta"), asym_val, sym_val) %>%
   gather(key = "delta_TP_type", value = "delta_TP_value", -c(asym_val, sym_val)) %>%
-
   ggplot() + 
     geom_point(aes(x = (asym_val - sym_val), y = delta_TP_value, color = delta_TP_type), size = sz) + 
     geom_point(aes(x = 0, y = 0), size = sz, color = "#7E3C2F") +
     scale_color_manual(values = c("#FF0000", "#00BD54")) +
     labs(title = "SB gmax, TP_delta", x = "Delta TP values")
+
+# measurement for total shift for one direction of environmental change
+asym_measures %>%
+  filter
 
 
 
