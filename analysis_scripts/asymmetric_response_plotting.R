@@ -31,7 +31,7 @@ plot_asymmetric_response <- function(asym_measures,
                                      lw = 4,
                                      pprint = TRUE
                                      ){
-  if (!(index %in% names(asym_measures))){
+  if (!(subject %in% names(asym_measures))){
     stop("Please input subject contained in list asym_measures. Call names(asym_measures) to check available subjects.")
     }
   # search for index
@@ -106,3 +106,16 @@ plot_asymmetric_response <- function(asym_measures,
   }
 }
 
+# plot_asymmetric_response(asym_measures, "gmaxS")
+
+plot_asymmetric_response(asym_measures, "hOSB")
+# two discussion points:
+#* hOSB enhanced (SB favoured in tolerance towards stress) results in higher total shift to anoxic state. 
+#  Bigger shift means larger change in structure and function of the ecosystem (Regime shifts), and thus the more
+#  tolerant strain induces more ecosystem change once tipping point has been hit.
+#* h0SB decreased (SB infavoured), more ecosystem change is induced when SB collapse. Attention: When in anoxic state
+#  and trying to recover oxic, decreasing tolerance of SB leads to "earlier" TP of SB, but the shift back may be greater,
+# than expected!
+#* it may be important whether tolerance is increased or decreased as the shift deltas are greater when decreased
+
+# plot_asymmetric_response(asym_measures, "stressor")

@@ -15,7 +15,8 @@ theme_set(
                                                       ends = "both")),
         axis.line.y = element_line(arrow = grid::arrow(length = unit(0.2, "cm"),
                                                        ends = "last")),
-        legend.position = "none") 
+        #legend.position = "none"
+        ) 
 )
 # point to directory from project
 wd <- "simulation_scripts/experiments_RDS_wt1e+06"
@@ -32,21 +33,38 @@ bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
 fig_1c <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") 
 fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") 
 fig_1cd <- ggarrange(fig_1c, fig_1d, nrow = 1, ncol = 2)
+
 # figure 2: powerpoint
 
-# figure 3 a) # HERE SIMULATION NEED TO BE RERUN WITH SMALLER RANGE
-sym_res <- readRDS(file.path("simulation_scripts", "asymmetry_experiments_RDS_wt1e+06", "simulation_asymmetric_stressor.asym1.RDS")) # file.path(wd, "simulation_symmetric_temporal.RDS")
-fig_3a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate") #+ labs(x = "aO",  y = "concentration")
-fig_3b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate")
-asym_res_trait <- readRDS(file.path("simulation_scripts", "asymmetry_experiments_RDS_wt1e+06", "simulation_asymmetric_hOSB60.RDS"))
-fig_3c <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "recovery", typ = "substrate")
-fig_3d <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "collapse", typ = "substrate")
-asym_res_stressor <- readRDS(file.path("simulation_scripts", "asymmetry_experiments_RDS_wt1e+06", "simulation_asymmetric_stressor.asym0.6.RDS"))
-fig_3e <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "recovery", typ = "substrate")
-fig_3f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collapse", typ = "substrate")
-fig_3 <- ggarrange(fig_3a, fig_3b, fig_3c, fig_3d, fig_3e, fig_3f, nrow = 3, ncol = 2)
+# figure 3: dynamics
+dyn_res <- readRDS(file.path("simulation_scripts", "experiments_RDS_wt1e+06", "simulation_time_dynamics_symmetric.RDS" ))
+fig3 <- dyn_res$result %>% 
+  dplyr::select(c(O, aO, aS, time, SR, P)) %>%
+  mutate_at(c("O", "SR", "P"), log10) %>%
+  gather(key = species, value = concentration, -time) %>%
+  mutate(panel = ifelse(species %in% c("O", "SR"), "substrates",
+                        ifelse(species %in% c("aO", "aS"), "diffusivities", 
+                              "nutrient"))) %>%
+  ggplot(aes(x = time, y = concentration, color = species)) + 
+           geom_path() +
+          facet_wrap(~panel, ncol = 1, scales = "free_y")
+           
 
-# figure 4
+# figure 4 a) 
+# symmetric case
+sym_res <- readRDS(file.path("simulation_scripts", "asymmetry_experiments_RDS_wt1e+06", "simulation_asymmetric_stressor.asym1.RDS")) # file.path(wd, "simulation_symmetric_temporal.RDS")
+fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate") #+ labs(x = "aO",  y = "concentration")
+fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate")
+# trait asym
+asym_res_trait <- readRDS(file.path("simulation_scripts", "asymmetry_experiments_RDS_wt1e+06", "simulation_asymmetric_hOSB60.RDS"))
+fig_4c <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "recovery", typ = "substrate")
+fig_4d <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "collapse", typ = "substrate")
+# stressor asym
+asym_res_stressor <- readRDS(file.path("simulation_scripts", "asymmetry_experiments_RDS_wt1e+06", "simulation_asymmetric_stressor.asym0.6.RDS"))
+fig_4e <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "recovery", typ = "substrate")
+fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collapse", typ = "substrate")
+fig_4 <- ggarrange(fig_4a, fig_4b, fig_4c, fig_4d, fig_4e, fig_4f, nrow = 4, ncol = 2)
+
 
 # save all the figure
 if (!(dir.exists("figures"))){dir.create("figures")}

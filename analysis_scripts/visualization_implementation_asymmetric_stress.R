@@ -1,7 +1,7 @@
 library(tidyverse)
 
 # asymmetry factor, change this to observe
-asym_factor <- 0.2 # mutliplies the extremes of the sequence, is and argument of the parameter set
+asym_factor <- 2 # mutliplies the extremes of the sequence, is and argument of the parameter set
 
 # define prerequesites
 time <- seq(0, 100, length = 300) # times series

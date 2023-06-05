@@ -1,7 +1,8 @@
 #to manually explore the each of the results
+source("analysis_scripts/read_microxanox.R")
 
 # file to glimpse 
-file <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06/simulation_asymmetric_hOSB90.RDS"
+file <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06/simulation_asymmetric_hOSB150.RDS"
 
 theme_set(theme_bw())
 
