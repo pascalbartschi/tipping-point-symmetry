@@ -7,8 +7,8 @@ num_strains <- 1 # number of strains per group
 event_interval <- 1000 # interval of event occurence
 symmetry_axis <- -1 # log10()
 steps <- 300
-start_aO <- -1.25 # difference is much smaller due to divergence of diffusivities
-start_aS <- -0.75
+start_aO <- -2.0 # difference is much smaller due to divergence of diffusivities
+start_aS <- -0.0
 
 
 log10a_series <- c(seq(start_aO, start_aS, length = steps), 
@@ -41,12 +41,14 @@ parameter <- new_runsim_parameter(
   minimum_abundances = c(1, 0 , 1),       # PB stays 0
   strain_parameter = sp,
   log10a_series =  log10a_series,
-  sym_axis = -1
+  asym_factor = 1
 )
 
 names(parameter$minimum_abundances) <- c("CB", "PB", "SB")
 rm(sp)
 
+# ensure correct symmetry fo unusual vector
+parameter$log10aS_series <- 2 * mean(log10a_series) - log10a_series
 
 
 parameter$sim_duration <- length(parameter$log10a_series) * wait_time 

@@ -37,7 +37,7 @@ fig_1cd <- ggarrange(fig_1c, fig_1d, nrow = 1, ncol = 2)
 # figure 2: powerpoint
 
 # figure 3: dynamics
-dyn_res <- readRDS(file.path("simulation_scripts", "experiments_RDS_wt1e+06", "simulation_time_dynamics_symmetric.RDS" ))
+dyn_res <- readRDS(file.path("simulation_scripts", "experiments_RDS_wt1e+06", "simulation_time_dynamics_symmetric_0to2.RDS" ))
 fig3 <- dyn_res$result %>% 
   dplyr::select(c(O, aO, aS, time, SR, P)) %>%
   mutate_at(c("O", "SR", "P"), log10) %>%
