@@ -1,5 +1,6 @@
 # read the package manually
 source("analysis_scripts/read_microxanox.R")
+library(patchwork)
 
 # set the theme such that all figures look the same
 theme_set(

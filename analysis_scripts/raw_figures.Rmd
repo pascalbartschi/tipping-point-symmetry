@@ -1,0 +1,134 @@
+---
+title: "Paper Figures"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = "../figures/")
+```
+
+
+```{r}
+# read the package manually
+source("analysis_scripts/read_microxanox.R")
+library(patchwork)
+
+# set the theme such that all figures look the same
+# theme_set(
+my_theme <-  theme(text = element_text(size = 7),
+        axis.title = element_blank(),
+        title = element_blank(),
+        # axis.ticks.x = element_blank(),
+        # axis.ticks.y = element_blank(),
+        axis.text = element_text(size = 5),
+        axis.title.x = element_text(
+          size = 8,
+          margin = margin(t = 10)
+        ),
+        axis.title.x.top = element_text(
+          size = 8,
+          margin = margin(t = 10)
+        ),
+        # axis.text.y = element_blank(),
+        panel.background = element_blank(),
+        axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
+                                                      ends = "both")),
+        axis.line.y = element_line(arrow = grid::arrow(length = unit(0.2, "cm"),
+                                                       ends = "last")),
+        plot.tag = element_text(size = 10, face = "bold", margin = margin(0, 0, -5, -10)),
+        legend.position = "bottom",
+        legend.direction = 'horizontal'
+        ) 
+# )
+```
+
+
+```{r figure_1cd, fig.width=10, fig.height=5}
+# point to directory from project
+wd <- "simulation_scripts/experiments_RDS_wt1e+06"
+# figure 1c, d: asymmetry in magnitudes in bush simulation
+bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
+fig_1a <- ggplot() + theme(panel.background = element_blank()) + my_theme
+fig_1b <- ggplot() + labs(tag = "B") + theme(panel.background = element_blank()) + my_theme
+fig_1c <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") + my_theme
+fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + my_theme
+# (fig_1a | fig_1b) / (fig_1c | fig_1d) 
+wrap_plots(fig_1a, fig_1b, fig_1c, fig_1d) +
+  plot_layout(ncol = 2, guide = "collect") + 
+  guides(color = guide_legend(position = "bottom")) + 
+  plot_annotation(tag_levels = "A") 
+
+```
+```{r figure_3, fig.width=12, fig.height = 10}
+# figure 3: dynamics
+dyn_res <- readRDS(file.path(wd , "simulation_time_dynamics_symmetric.RDS" ))
+df3 <- dyn_res$result %>% 
+  dplyr::select(c(O, aO, aS, time, SR, P)) %>%
+  mutate_at(c("O", "SR", "P"), log10) %>%
+  gather(key = species, value = concentration, -time) %>%
+  mutate(panel = ifelse(species %in% c("O", "SR"), "substrates",
+                        ifelse(species %in% c("aO", "aS"), "diffusivities", 
+                              "nutrient"))) 
+
+fig3a<- ggplot(data = df3 %>% filter(panel == "diffusivities"), 
+               mapping = aes(x = time, y = concentration, color = species)) + 
+           geom_step() + 
+   scale_color_manual(values = c("#007835", "#C30000"))
+
+fig3c <- ggplot(data = df3 %>% filter(panel == "nutrient"),
+                mapping = aes(x = time, y = concentration, color = species)) +
+            geom_step() +
+  scale_color_manual(values = c("#33e3ff"))
+
+fig3b <- ggplot(data = df3 %>% filter(panel == "substrates"), 
+                mapping = aes(x = time, y= concentration, color = species)) +
+        geom_step()  +
+   scale_color_manual(values = c("#00BD54", "#FF0000"))
+
+
+wrap_plots(fig3a, fig3b, fig3c) + 
+  plot_layout(ncol = 1, guide = "collect") & 
+  my_theme
+```
+
+```{r figure_4, fig.width = 10, fig.height=15}
+# point to directory from project
+wd <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06"
+
+# figure 4 a) 
+# symmetric case
+sym_res <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym1.RDS")) # file.path(wd, "simulation_symmetric_temporal.RDS")
+fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate") #+ labs(x = "aO",  y = "concentration")
+fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate")
+# trait asym
+asym_res_trait <- readRDS(file.path(wd, "simulation_asymmetric_hOSB60.RDS"))
+fig_4c <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "recovery", typ = "substrate")
+fig_4d <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "collapse", typ = "substrate")
+# stressor asym
+asym_res_stressor <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym0.6.RDS"))
+fig_4e <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "recovery", typ = "substrate")
+fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collapse", typ = "substrate")
+# fig_4 <- ggarrange(fig_4a, fig_4b, fig_4c, fig_4d, fig_4e, fig_4f, nrow = 4, ncol = 2)
+# plot <- (fig_4a | fig_4b) / (fig_4c | fig_4d) / (fig_4e | fig_4f)
+
+wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d, fig_4e, fig_4f) +
+  plot_layout(ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = 'A') & 
+  my_theme &
+  theme(plot.tag = element_text(margin = margin(0,0,-10,0)))
+```
+```{r}
+source("analysis_scripts/asymmetric_response_plotting.R")
+plist_h0SB <- plot_asymmetric_response(asym_measures, "hOSB", pprint = F)
+plist_stressor <- plot_asymmetric_response(asym_measures, "stressor", pprint = F)
+
+fig5a <- plist_h0SB[[5]]
+fig5b <- plist_stressor[[5]]
+
+wrap_plots(fig5a, fig5b) + 
+  plot_layout(ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = "A") &
+  theme_bw()
+```
+

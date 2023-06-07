@@ -1,0 +1,77 @@
+---
+title: "Presentation FIgures"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, fig.path = "../presentation_figures")
+```
+
+```{r}
+# read the package manually
+source("analysis_scripts/read_microxanox.R")
+library(patchwork)
+
+my_theme <-  theme(text = element_text(size = 7),
+        axis.title = element_blank(),
+        title = element_blank(),
+        # axis.ticks.x = element_blank(),
+        # axis.ticks.y = element_blank(),
+        axis.text = element_text(size = 8, family = "Calibri"),
+        axis.title.x = element_text(
+          size = 10,
+          margin = margin(t = 10), 
+          family = "Calibri"
+        ),
+        axis.title.x.top = element_text(
+          size = 10,
+          margin = margin(t = 10), 
+          family = "Calibri"
+        ),
+        # axis.text.y = element_blank(),
+        panel.background = element_blank(),
+        axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
+                                                      ends = "both")),
+        axis.line.y = element_line(arrow = grid::arrow(length = unit(0.2, "cm"),
+                                                       ends = "last")),
+        plot.tag = element_text(size = 10, face = "bold", margin = margin(0, 0, -5, -10)),
+        legend.position = "bottom",
+        legend.direction = 'horizontal'
+        ) 
+```
+
+```{r bush_substrates}
+# point to directory from project
+wd <- "simulation_scripts/experiments_RDS_wt1e+06"
+# figure 1c, d: asymmetry in magnitudes in bush simulation
+bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
+
+bush_a <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") + 
+  labs(title = "recovery", x = expression(Log[10]("Oxygen diffusivity"))) + 
+  my_theme
+bush_b <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + 
+  labs(title = "collapse", x = expression(Log[10]("Oxygen diffusivity"))) +
+  my_theme
+wrap_plots(bush_a, bush_b) + 
+  plot_layout(ncol = 2, guides = "collect") &
+  my_theme
+```
+```{r internship result}
+int_res <- readRDS("simulation_scripts/asymmetry_experiments_RDS_wt1e+06/simulation_asymmetric_stressor.asym0.4.RDS")
+#plot_temporal_ss(int_res)
+
+int_a <- plot_trajectory_symmetry(res = int_res, trajectory = "recovery", typ = "substrate") + 
+  labs(title = "recovery", x = expression(Log[10]("Oxygen diffusivity"))) + 
+  my_theme
+int_b <- plot_trajectory_symmetry(res = int_res, trajectory = "collapse", typ = "substrate") + 
+  labs(title = "collapse", x = expression(Log[10]("Oxygen diffusivity"))) +
+  my_theme
+
+wrap_plots(int_a, int_b) + 
+  plot_layout(ncol = 2, guides = "collect") &
+  my_theme
+
+
+```
+

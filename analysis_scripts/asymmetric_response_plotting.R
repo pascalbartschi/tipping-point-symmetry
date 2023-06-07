@@ -2,28 +2,28 @@
 source("analysis_scripts/asymmetric_response_analysis.R")
 
 # set the theme
-
-theme_set(
-  theme(# title = element_blank(),
-        text = element_text(family  ="Arial", size = 7),
-        axis.title = element_blank(),
-        # axis.ticks.x = element_blank(),
-        # axis.ticks.y = element_blank(),
-        axis.text = element_text(family = "Arial", size = 5),
-        # axis.text.y = element_blank(),
-        panel.grid  = element_line(linewidth = 0.3,
-                                         linetype = "dashed",
-                                         color = "#dedddd"),
-        panel.background = element_blank(),
-        # axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
-        #                                                ends = "both")),
-        #axis.line.y = element_line(),
-        # axis.line.y = element_line(arrow = grid::arrow(length = unit(0.3, "cm"), 
-        #                                                ends = "last")),
-        panel.border = element_rect(fill = NA, linewidth = 0.3),
-        # legend.position = "none"
-        ) 
-)
+# 
+# theme_set(
+#   theme(# title = element_blank(),
+#         text = element_text(family  ="Arial", size = 7),
+#         axis.title = element_blank(),
+#         # axis.ticks.x = element_blank(),
+#         # axis.ticks.y = element_blank(),
+#         axis.text = element_text(family = "Arial", size = 5),
+#         # axis.text.y = element_blank(),
+#         panel.grid  = element_line(linewidth = 0.3,
+#                                          linetype = "dashed",
+#                                          color = "#dedddd"),
+#         panel.background = element_blank(),
+#         # axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
+#         #                                                ends = "both")),
+#         #axis.line.y = element_line(),
+#         # axis.line.y = element_line(arrow = grid::arrow(length = unit(0.3, "cm"), 
+#         #                                                ends = "last")),
+#         panel.border = element_rect(fill = NA, linewidth = 0.3),
+#         # legend.position = "none"
+#         ) 
+# )
 
 plot_asymmetric_response <- function(asym_measures,
                                      subject,
@@ -106,16 +106,19 @@ plot_asymmetric_response <- function(asym_measures,
   }
 }
 
-# plot_asymmetric_response(asym_measures, "gmaxS")
-
-plot_asymmetric_response(asym_measures, "hOSB")
-# two discussion points:
-#* hOSB enhanced (SB favoured in tolerance towards stress) results in higher total shift to anoxic state. 
-#  Bigger shift means larger change in structure and function of the ecosystem (Regime shifts), and thus the more
-#  tolerant strain induces more ecosystem change once tipping point has been hit.
-#* h0SB decreased (SB infavoured), more ecosystem change is induced when SB collapse. Attention: When in anoxic state
-#  and trying to recover oxic, decreasing tolerance of SB leads to "earlier" TP of SB, but the shift back may be greater,
-# than expected!
-#* it may be important whether tolerance is increased or decreased as the shift deltas are greater when decreased
-
-# plot_asymmetric_response(asym_measures, "stressor")
+if (sys.nframe() == 0){
+  
+  # plot_asymmetric_response(asym_measures, "gmaxS")
+  
+  plot_asymmetric_response(asym_measures, "hOSB")
+  # two discussion points:
+  #* hOSB enhanced (SB favoured in tolerance towards stress) results in higher total shift to anoxic state. 
+  #  Bigger shift means larger change in structure and function of the ecosystem (Regime shifts), and thus the more
+  #  tolerant strain induces more ecosystem change once tipping point has been hit.
+  #* h0SB decreased (SB infavoured), more ecosystem change is induced when SB collapse. Attention: When in anoxic state
+  #  and trying to recover oxic, decreasing tolerance of SB leads to "earlier" TP of SB, but the shift back may be greater,
+  # than expected!
+  #* it may be important whether tolerance is increased or decreased as the shift deltas are greater when decreased
+  
+  plot_asymmetric_response(asym_measures, "stressor")
+}
