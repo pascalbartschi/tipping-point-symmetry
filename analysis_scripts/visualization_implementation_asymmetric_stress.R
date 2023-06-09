@@ -1,7 +1,8 @@
-library(tidyverse)
+# library(ggplot2)
+# library(tidyverse)
 
 # asymmetry factor, change this to observe
-asym_factor <- 2 # mutliplies the extremes of the sequence, is and argument of the parameter set
+asym_factor <- 0.2 # mutliplies the extremes of the sequence, is and argument of the parameter set
 
 # define prerequesites
 time <- seq(0, 100, length = 300) # times series
@@ -14,10 +15,15 @@ under <- axis - delta
 upper <- axis + delta
 diffusivity2 <- 2*axis - (seq(under, upper, length = length(diffusivity))) # formula
 
-ggplot() + 
-  geom_line(aes(x = time, y=  diffusivity, color = "a1")) + 
-  geom_line(aes(x=time, y = diffusivity2, color = "a2")) + 
-  geom_hline(aes(yintercept = axis, color = "sym axis"), linetype = "dashed") + 
+plt.df <- data.frame(value = c(diffusivity, diffusivity2), 
+                     key = rep(c("Oxygen diffusivity", "Sulfur diffusivity"), each = 300), 
+                     time = rep(time, times = 2))
+
+ggplot(data = plt.df) + 
+  geom_line(aes(x = time, y = value, color = key)) + 
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  # geom_hline(aes(yintercept = axis, color = "sym axis"), linetype = "dashed") + 
+  labs(x = "Time", y = "", color = "") + 
   theme_bw()
 
 
