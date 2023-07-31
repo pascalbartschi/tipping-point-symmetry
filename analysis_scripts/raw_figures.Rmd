@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.path = "../figures/")
+knitr::opts_chunk$set(echo = TRUE, fig.path = "../../symmetry_hysteresis_manuscript/figures/", dpi = 360)
 ```
 
 ```{r}
@@ -27,8 +27,12 @@ my_theme <-  theme(text = element_text(size = 7),
         title = element_blank(),
         # axis.ticks.x = element_blank(),
         # axis.ticks.y = element_blank(),
-        axis.text = element_text(size = 5, family = "Calibri"),
+        axis.text = element_text(size = 7, family = "Calibri"),
         axis.title.x = element_text(
+          size = 8,
+          margin = margin(t = 10)
+        ),
+        axis.title.y = element_text(
           size = 8,
           margin = margin(t = 10)
         ),
@@ -50,24 +54,24 @@ my_theme <-  theme(text = element_text(size = 7),
 ```
 
 
-```{r figure_1cd, fig.width=10, fig.height=5}
+```{r figure_1cd, fig.width=5, fig.height=5}
 # point to directory from project
 wd <- "simulation_scripts/experiments_RDS_wt1e+06"
 # figure 1c, d: asymmetry in magnitudes in bush simulation
 bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
-fig_1a <- ggplot() + theme(panel.background = element_blank()) + my_theme
-fig_1b <- ggplot() + labs(tag = "B") + theme(panel.background = element_blank()) + my_theme
+fig_1a <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver", y = "Concentration") + my_theme
+fig_1b <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver") + my_theme
 fig_1c <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") + my_theme
-fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + my_theme
+fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + labs(y = "") + my_theme
 # (fig_1a | fig_1b) / (fig_1c | fig_1d) 
 wrap_plots(fig_1a, fig_1b, fig_1c, fig_1d) +
   plot_layout(ncol = 2, guide = "collect") + 
   guides(color = guide_legend(position = "bottom")) + 
-  plot_annotation(tag_levels = "A") & 
+  plot_annotation(tag_levels = "a") & 
   my_theme
 
 ```
-```{r figure_3, fig.width=12, fig.height = 10}
+```{r figure_3, fig.width=5, fig.height = 5}
 wd <- "simulation_scripts/experiments_RDS_wt1e+06"
 # figure 3: dynamics
 dyn_res <- readRDS(file.path(wd , "simulation_time_dynamics_symmetric.RDS" ))
@@ -90,34 +94,40 @@ df3 <- dyn_res$result %>%
 
 fig3a<- ggplot(data = df3 %>% filter(panel == "diffusivities"), 
                mapping = aes(x = time, y = concentration, color = species_plot)) + 
+          labs(x  = "Time", y = "Concentration") +
           geom_path(linetype = "dashed") + 
           scale_color_manual(values = c("#e85050", "#5da1df"))
 
 fig3c <- ggplot(data = df3 %>% filter(panel == "nutrient"),
                 mapping = aes(x = time, y = concentration, color = species_plot)) +
             geom_step() +
+        labs(x  = "Time", y = "Concentration") +
   scale_color_manual(values = c("#674ea7"))
 
 fig3b <- ggplot(data = df3 %>% filter(panel == "substrates"), 
                 mapping = aes(x = time, y= concentration, color = species_plot)) +
         geom_step()  +
+   labs(x  = "Time", y = "Concentration") +
    scale_color_manual(values = c("#e85050", "#5da1df"))
 
 
 wrap_plots(fig3a, fig3b, fig3c) + 
   plot_layout(ncol = 1, guide = "collect") +
-  plot_annotation(tag_levels = "A") & 
-  my_theme
+  plot_annotation(tag_levels = "a") & 
+  my_theme & 
+  theme(axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
+                                                      ends = "last")))
+# todo: y axis labels, x axis label
 ```
 
-```{r figure_4, fig.width = 10, fig.height=15}
+```{r figure_4, fig.width = 5, fig.height=7.5}
 # point to directory from project
 wd <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06"
 
 # figure 4 a) 
 # symmetric case
 sym_res <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym1.RDS"))
-fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate") #+ labs(x = "aO",  y = "concentration")
+fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate")
 fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate")
 # trait asym
 asym_res_trait <- readRDS(file.path(wd, "simulation_asymmetric_hOSB60.RDS"))
@@ -132,7 +142,7 @@ fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collap
 
 wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d, fig_4e, fig_4f) +
   plot_layout(ncol = 2, guides = "collect") +
-  plot_annotation(tag_levels = 'A') & 
+  plot_annotation(tag_levels = 'a') & 
   my_theme &
   theme(plot.tag = element_text(margin = margin(0,0,-10,0)))
 ```
@@ -140,13 +150,14 @@ wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d, fig_4e, fig_4f) +
 source("analysis_scripts/asymmetric_response_plotting.R")
 ```
 
-```{r}
+```{r figure_5, fig.width = 7, fig.height=4}
 plist_h0SB <- plot_asymmetric_response(asym_measures, "hOSB", pprint = F)
 plist_stressor <- plot_asymmetric_response(asym_measures, "stressor", pprint = F)
 
 fig5a <- plist_h0SB[[5]] + 
   labs(x = expression(h[O]), y = "Shift magnitude", color = "Shift to:") + 
   scale_y_continuous(limits = c(55, 115), breaks = seq(55, 115, by = 10)) +
+  scale_color_manual(values = c("#5da1df", "#e85050")) +
   theme_bw() +
   theme(legend.title = element_blank(),
         legend.position = "none",
@@ -154,6 +165,7 @@ fig5a <- plist_h0SB[[5]] +
 
 fig5b <- plist_stressor[[5]] + labs(x = "Stressor asymmetry factor", y = "Shift magnitude", color = "Shift to:") +
  scale_y_continuous(limits = c(55, 115), breaks = seq(55, 115, by = 10)) +
+  scale_color_manual(values = c("#5da1df", "#e85050")) +
   theme_bw() +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
@@ -164,7 +176,7 @@ fig5b <- plist_stressor[[5]] + labs(x = "Stressor asymmetry factor", y = "Shift 
 
 wrap_plots(fig5a, fig5b) +
   # plot_layout(ncol = 2, guides = "collect") +
-  plot_annotation(tag_levels = "A") 
+  plot_annotation(tag_levels = "a") 
   # theme_bw() &
   # theme(legend.title =  element_blank(),
   #   legend.position = "bottom",

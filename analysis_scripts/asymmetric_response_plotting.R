@@ -40,21 +40,21 @@ plot_asymmetric_response <- function(asym_measures,
   p1 <- ggplot(data = asym_measures[[index]] %>% filter(species_type == "substrate")) + 
     geom_point(aes(x = asym_val, y = shift, shape = shift_type, color = species), size = sz) + 
     geom_point(aes(x = sym_val, y = shift_sym, shape = shift_type), size = sz, color = "#7E3C2F") +
-    scale_color_manual(values = c("#e85050", "#5da1df")) +
+    scale_color_manual(values = c("#5da1df", "#e85050")) +
     labs(title = paste("SB", subject, "shifts"), x = paste("Delta", subject, "values"))
   
   ## hysteresis area
   p2 <- ggplot(data = asym_measures[[index]] %>% filter(species_type == "substrate")) + 
     geom_point(aes(x = asym_val, y = hyst_area, color = species), size = sz) + 
     geom_point(aes(x = sym_val, y = hyst_area_sym), size = sz, color = "#7E3C2F") +
-    scale_color_manual(values = c("#e85050", "#5da1df")) +
+    scale_color_manual(values = c("#5da1df", "#e85050")) +
     labs(title = paste("SB", subject, "hysteresis area"), x = paste("Delta", subject, "values"))
   
   ## hysteresis range
   p3 <- ggplot(data = asym_measures[[index]] %>% filter(species_type == "substrate")) + 
     geom_point(aes(x = asym_val, y = hyst_range, color = species), size = sz) + 
     geom_point(aes(x = sym_val, y = hyst_range_sym), size = sz, color = "#7E3C2F") +
-    scale_color_manual(values = c("#e85050", "#5da1df")) +
+    scale_color_manual(values = c("#5da1df", "#e85050")) +
     labs(title = paste("SB", subject, "hysteresis range"), x = paste("Delta", subject, "values"))
   
   ## tipping point delta
@@ -68,7 +68,7 @@ plot_asymmetric_response <- function(asym_measures,
     ggplot() + 
     geom_point(aes(x = asym_val, y = delta_TP_value, color = delta_TP_type), size = sz) + 
     geom_point(aes(x = sym_val, y = 0), size = sz, color = "#7E3C2F") +
-    scale_color_manual(values = c("#e85050", "#5da1df")) +
+    scale_color_manual(values = c("#5da1df", "#e85050")) +
     labs(title = paste("SB", subject, "TP delta"), x = paste("Delta", subject, "values"))
   
   # measurement for total shift for one direction of environmental change
@@ -94,7 +94,7 @@ plot_asymmetric_response <- function(asym_measures,
     ggplot()+
     geom_point(aes(x = asym_val, y = total_shift, color = total_shift_to)) + 
     geom_point(aes(x = sym_val, y = total_shift_sym), color = "#7E3C2F")  + 
-    scale_color_manual(values = c("#e85050", "#5da1df")) +
+    scale_color_manual(values = c("#5da1df", "#e85050")) +
     # scale_color_manual(values = c("#FF0000", "#00BD54")) +
     labs(title = paste("SB", subject, "total shift"), x = paste("Delta", subject, "values"))
   plot_list <- list(p1, p2, p3, p4, p5)
