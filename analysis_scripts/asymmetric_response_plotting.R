@@ -61,14 +61,19 @@ plot_asymmetric_response <- function(asym_measures,
   p4 <- asym_measures[[index]] %>% 
     filter(species_type == "substrate") %>% 
     select(contains("TP"), asym_val, sym_val) %>%
-    mutate(anox_TP_delta = anox_TP_sym - anox_TP, 
-           ox_TP_delta = ox_TP_sym - ox_TP) %>%
-    select(ends_with("delta"), asym_val, sym_val) %>%
+    mutate(anox_TP_delta = anox_TP- anox_TP_sym, 
+           ox_TP_delta = ox_TP - ox_TP_sym) %>%
+    mutate(combined_dir = anox_TP_delta + ox_TP_delta) %>% 
+    select(ends_with("delta"), asym_val, sym_val, combined_dir) %>%
     gather(key = "delta_TP_type", value = "delta_TP_value", -c(asym_val, sym_val)) %>%
+    mutate(delta_TP_type = recode(delta_TP_type, 
+                                  anox_TP_delta = "anoxic-oxic",
+                                  ox_TP_delta = "oxic-anoxic",
+                                  combined_dir = "combined")) %>% 
     ggplot() + 
     geom_point(aes(x = asym_val, y = delta_TP_value, color = delta_TP_type), size = sz) + 
     geom_point(aes(x = sym_val, y = 0), size = sz, color = "#7E3C2F") +
-    scale_color_manual(values = c("#5da1df", "#e85050")) +
+    scale_color_manual(values = c("#e85050", "#cacbce", "#5da1df")) +
     labs(title = paste("SB", subject, "TP delta"), x = paste("Delta", subject, "values"))
   
   # measurement for total shift for one direction of environmental change
@@ -91,9 +96,10 @@ plot_asymmetric_response <- function(asym_measures,
     mutate(total_shift = O_shift + SR_shift, 
            total_shift_to = ifelse(SR_shift_type == "recovery", "anoxic", "oxic"), 
            total_shift_sym = sum(shift_sym) / (nrow(.)/2)) %>% 
+    mutate(total_shift_delta = total_shift - total_shift_sym) %>% 
     ggplot()+
-    geom_point(aes(x = asym_val, y = total_shift, color = total_shift_to)) + 
-    geom_point(aes(x = sym_val, y = total_shift_sym), color = "#7E3C2F")  + 
+    geom_point(aes(x = asym_val, y = total_shift, color = total_shift_to), size = sz) + 
+    geom_point(aes(x = sym_val, y = total_shift_sym), color = "#7E3C2F", size = sz)  + 
     scale_color_manual(values = c("#5da1df", "#e85050")) +
     # scale_color_manual(values = c("#FF0000", "#00BD54")) +
     labs(title = paste("SB", subject, "total shift"), x = paste("Delta", subject, "values"))

@@ -150,32 +150,52 @@ wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d, fig_4e, fig_4f) +
 source("analysis_scripts/asymmetric_response_plotting.R")
 ```
 
-```{r figure_5, fig.width = 7, fig.height=4}
+```{r figure_5, fig.width = 7, fig.height=7}
 plist_h0SB <- plot_asymmetric_response(asym_measures, "hOSB", pprint = F)
 plist_stressor <- plot_asymmetric_response(asym_measures, "stressor", pprint = F)
 
 fig5a <- plist_h0SB[[5]] + 
   labs(x = expression(h[O]), y = "Shift magnitude", color = "Shift to:") + 
   scale_y_continuous(limits = c(55, 115), breaks = seq(55, 115, by = 10)) +
-  scale_color_manual(values = c("#5da1df", "#e85050")) +
   theme_bw() +
-  theme(legend.title = element_blank(),
+  theme(axis.title.x = element_blank(),
+        axis.text.x= element_blank(),
+        legend.title = element_blank(),
         legend.position = "none",
         plot.title = element_blank())
 
 fig5b <- plist_stressor[[5]] + labs(x = "Stressor asymmetry factor", y = "Shift magnitude", color = "Shift to:") +
  scale_y_continuous(limits = c(55, 115), breaks = seq(55, 115, by = 10)) +
-  scale_color_manual(values = c("#5da1df", "#e85050")) +
+  theme_bw() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        legend.title =  element_text(),
+        legend.position = c(0.8, 0.8),
+        legend.direction = 'vertical', 
+        plot.title = element_blank())
+
+fig5c <- plist_h0SB[[4]] + 
+  labs(x = expression(h[O]), y = "Tipping point distance ", color = "Shift to:") + 
+  scale_y_continuous(limits = c(-0.3, 0.1), breaks = c(-0.3, -0.2, -0.1, 0, 0.1)) +
+  theme_bw() +
+  theme(legend.title = element_blank(),
+        legend.position = "none",
+        plot.title = element_blank())
+
+fig5d <- plist_stressor[[4]] + labs(x = "Stressor asymmetry factor", y = "Tipping point adaption", color = "Tipping point:") +
+  scale_y_continuous(breaks = c(-0.3, -0.2, -0.1, 0, 0.1)) +
   theme_bw() +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         legend.title =  element_text(),
-        legend.position = c(0.83, 0.85),
+        legend.position = c(0.78, 0.18),
         legend.direction = 'vertical', 
         plot.title = element_blank())
 
-wrap_plots(fig5a, fig5b) +
-  # plot_layout(ncol = 2, guides = "collect") +
+wrap_plots(fig5a, fig5b, fig5c, fig5d) +
+  plot_layout(ncol = 2) +
   plot_annotation(tag_levels = "a") 
   # theme_bw() &
   # theme(legend.title =  element_blank(),
