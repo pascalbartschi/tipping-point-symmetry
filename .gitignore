@@ -11,4 +11,6 @@ analysis_scripts/presentation_figures
 presentation_figures
 experiments/experiments_RDS_wt100
 experiments/asymmetry_experiments_RDS_wt100
-experiments_RDS
+experiments/experiments_RDS_wt1e+06
+experiments/asymmetry_experiments_RDS_wt1e+06
+experiments/experiments_RDS
