@@ -9,3 +9,6 @@ simulation_scripts/.DS_Store
 simulation_scripts/.DS_Store
 analysis_scripts/presentation_figures
 presentation_figures
+experiments/experiments_RDS_wt100
+experiments/asymmetry_experiments_RDS_wt100
+experiments_RDS
