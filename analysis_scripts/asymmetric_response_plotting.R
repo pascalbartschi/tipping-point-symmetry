@@ -94,13 +94,13 @@ plot_asymmetric_response <- function(asym_measures,
           rename(O_shift = shift, O_shift_type = shift_type)) %>%
     select(-species) %>%
     mutate(total_shift = O_shift + SR_shift, 
-           total_shift_to = ifelse(SR_shift_type == "recovery", "anoxic", "oxic"), 
+           total_shift_to = ifelse(SR_shift_type == "recovery", "oxic-anoxic", "anoxic-oxic"), 
            total_shift_sym = sum(shift_sym) / (nrow(.)/2)) %>% 
     mutate(total_shift_delta = total_shift - total_shift_sym) %>% 
     ggplot()+
     geom_point(aes(x = asym_val, y = total_shift, color = total_shift_to), size = sz) + 
     geom_point(aes(x = sym_val, y = total_shift_sym), color = "#7E3C2F", size = sz)  + 
-    scale_color_manual(values = c("#5da1df", "#e85050")) +
+    scale_color_manual(values = c("#e85050", "#5da1df")) +
     # scale_color_manual(values = c("#FF0000", "#00BD54")) +
     labs(title = paste("SB", subject, "total shift"), x = paste("Delta", subject, "values"))
   plot_list <- list(p1, p2, p3, p4, p5)

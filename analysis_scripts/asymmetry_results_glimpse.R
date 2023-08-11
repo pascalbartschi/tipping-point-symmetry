@@ -2,7 +2,7 @@
 source("analysis_scripts/read_microxanox.R")
 
 # file to glimpse 
-file <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06/simulation_asymmetric_stressor.asym1.8.RDS"
+file <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06/simulation_asymmetric_stressor.asym1.RDS"
 
 theme_set(theme_bw())
 

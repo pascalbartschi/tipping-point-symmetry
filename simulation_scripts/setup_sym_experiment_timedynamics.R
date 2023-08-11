@@ -47,7 +47,7 @@ parameter <- new_runsim_parameter(
 names(parameter$minimum_abundances) <- c("CB", "PB", "SB")
 rm(sp)
 
-# ensure correct symmetry fo unusual vector
+# ensure correct symmetry to oxygen vector
 parameter$log10aS_series <- 2 * mean(log10a_series) - log10a_series
 
 

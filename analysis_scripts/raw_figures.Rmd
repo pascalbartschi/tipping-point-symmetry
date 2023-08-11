@@ -8,7 +8,7 @@ date: "`r Sys.Date()`"
 knitr::opts_chunk$set(echo = TRUE, fig.path = "../../symmetry_hysteresis_manuscript/figures/", dpi = 360)
 ```
 
-```{r}
+```{r include=FALSE}
 library(extrafont)
 # font_import()
 loadfonts(dev = "win")
@@ -155,7 +155,7 @@ plist_h0SB <- plot_asymmetric_response(asym_measures, "hOSB", pprint = F)
 plist_stressor <- plot_asymmetric_response(asym_measures, "stressor", pprint = F)
 
 fig5a <- plist_h0SB[[5]] + 
-  labs(x = expression(h[O]), y = "Shift magnitude", color = "Shift to:") + 
+  labs(x = expression(h[O]), y = "Shift magnitude", color = "Magnitude") + 
   scale_y_continuous(limits = c(55, 115), breaks = seq(55, 115, by = 10)) +
   theme_bw() +
   theme(axis.title.x = element_blank(),
@@ -164,7 +164,7 @@ fig5a <- plist_h0SB[[5]] +
         legend.position = "none",
         plot.title = element_blank())
 
-fig5b <- plist_stressor[[5]] + labs(x = "Stressor asymmetry factor", y = "Shift magnitude", color = "Shift to:") +
+fig5b <- plist_stressor[[5]] + labs(x = "Stressor asymmetry factor", y = "Shift magnitude", color = "Magnitude") +
  scale_y_continuous(limits = c(55, 115), breaks = seq(55, 115, by = 10)) +
   theme_bw() +
   theme(axis.title.x = element_blank(),
@@ -177,20 +177,20 @@ fig5b <- plist_stressor[[5]] + labs(x = "Stressor asymmetry factor", y = "Shift 
         plot.title = element_blank())
 
 fig5c <- plist_h0SB[[4]] + 
-  labs(x = expression(h[O]), y = "Tipping point distance ", color = "Shift to:") + 
+  labs(x = expression(h[O]), y = "Tipping point distance ") + 
   scale_y_continuous(limits = c(-0.3, 0.1), breaks = c(-0.3, -0.2, -0.1, 0, 0.1)) +
   theme_bw() +
   theme(legend.title = element_blank(),
         legend.position = "none",
         plot.title = element_blank())
 
-fig5d <- plist_stressor[[4]] + labs(x = "Stressor asymmetry factor", y = "Tipping point adaption", color = "Tipping point:") +
+fig5d <- plist_stressor[[4]] + labs(x = "Stressor asymmetry factor", y = "Tipping point adaption", color = "Tipping point") +
   scale_y_continuous(breaks = c(-0.3, -0.2, -0.1, 0, 0.1)) +
   theme_bw() +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         legend.title =  element_text(),
-        legend.position = c(0.78, 0.18),
+        legend.position = c(0.78, 0.22),
         legend.direction = 'vertical', 
         plot.title = element_blank())
 
