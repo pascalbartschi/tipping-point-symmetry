@@ -5,13 +5,15 @@ num_cores <- 30
 options(mc.cores = num_cores) 
 
 # load the packages
-source("simulation_scripts/read_microxanox.R")
+source("experiments/read_microxanox.R")
 
 # define a wait_time = sample interval
-wait_time <- 1e2
+wait_time <- 1e6
 
 # seperate directiory
-folder_path <- paste0("simulation_scripts/asymmetry_experiments_RDS_wt", wait_time)
+folder_path <- "data/asymmetric-sim/stressor-asym/"
+
+# create dir
 if (!dir.exists(here::here(folder_path))){
   dir.create(folder_path)
 }
@@ -21,8 +23,8 @@ gc(full = TRUE)
 
 ## asymmetric growth rate
 # import the symmetric parameterset
-source("simulation_scripts/setup_sym_experiment_temporal.R")
-asym_factors <- seq(0.1, 0.9, by = 0.1)
+source("experiments/setup_sym_experiment_temporal.R")
+asym_factors <- seq(0, 2, by = 0.2)
 parameter$log10a_series <- seq(-2, 0,length = 300)
 for (asym_f in asym_factors){
   parameter <- update_asym_factor(parameter, asym_f)

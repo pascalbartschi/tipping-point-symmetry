@@ -7,8 +7,8 @@ num_strains <- 1 # number of strains per group
 event_interval <- 1000 # interval of event occurence
 symmetry_axis <- -1 # log10()
 steps <- 300
-start_aO <- -1.25 # difference is much smaller due to divergence of diffusivities
-start_aS <- -0.75
+start_aO <- -2 # difference is much smaller due to divergence of diffusivities
+start_aS <- 0
 
 
 log10a_series <- seq(start_aO, start_aS, length = steps)

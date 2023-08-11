@@ -1,4 +1,5 @@
-## set up experiment: parameter set and framework
+
+## set up experiment similar to  Bush et al. 2017 used in figure 1: parameter set and framework
 
 
 # wait_time  # time spent at each step, later set for ss finding
@@ -24,7 +25,7 @@ parameter <- new_runsim_parameter(
 
 names(parameter$minimum_abundances) <- c("CB", "PB", "SB")
 # rm(sp)
-parameter$strain_parameter$initial_state["CB_1"] <- 1e8
+parameter$strain_parameter$initial_state["CB_1"] <- 1e8 # that sim looks clean as oxygen favours CB in the startS
 
 parameter$sim_duration <- wait_time * length(parameter$log10a_series)
 parameter$sim_sample_interval <- wait_time  # to avoid having negative ODE results
