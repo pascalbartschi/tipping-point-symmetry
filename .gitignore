@@ -8,3 +8,5 @@ figures
 simulation_scripts/.DS_Store
 *.RDS
 simulation_scripts/.DS_Store
+analysis_scripts/presentation_figures
+
