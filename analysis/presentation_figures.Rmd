@@ -1,0 +1,199 @@
+---
+title: "Presentation FIgures"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, fig.path = "../presentation_figures/")
+```
+
+```{r}
+# read the package manually
+source("analysis_scripts/read_microxanox.R")
+library(patchwork)
+
+my_theme <-  theme(text = element_text(size = 7),
+        title = element_text(size = 15),
+        # axis.ticks.x = element_blank(),
+        # axis.ticks.y = element_blank(),
+        axis.text = element_text(size = 8),
+        axis.title = element_text(
+          size = 10,
+          margin = margin(t = 10), 
+          # ,family = "Calibri"
+        ),
+        axis.title.x.top = element_text(
+          size = 10,
+          margin = margin(t = 10)
+          # ,family = "Calibri"
+        ),
+        # axis.text.y = element_blank(),
+        panel.background = element_blank(),
+        axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
+                                                      ends = "both")),
+        axis.line.y = element_line(arrow = grid::arrow(length = unit(0.2, "cm"),
+                                                       ends = "last")),
+        plot.tag = element_text(size = 10, face = "bold", margin = margin(0, 0, -5, -10)),
+        legend.position = "bottom",
+        legend.direction = 'horizontal'
+        ) 
+```
+
+```{r bush_substrates}
+# point to directory from project
+wd <- "simulation_scripts/experiments_RDS_wt1e+06"
+# figure 1c, d: asymmetry in magnitudes in bush simulation
+bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
+
+bush_a <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") + 
+  labs(title = "recovery", x = expression(Log[10]("Oxygen diffusivity")), y = "Concentration", color = "") + 
+  my_theme
+bush_b <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + 
+  labs(title = "collapse", x = expression(Log[10]("Oxygen diffusivity")), y = "", color = "") +
+  my_theme
+wrap_plots(bush_a, bush_b) + 
+  plot_layout(ncol = 2, guides = "collect") &
+  my_theme
+```
+```{r internship result}
+int_res <- readRDS("simulation_scripts/asymmetry_experiments_RDS_wt1e+06/simulation_asymmetric_stressor.asym0.RDS")
+#plot_temporal_ss(int_res)
+
+int_a <- plot_trajectory_symmetry(res = int_res, trajectory = "recovery", typ = "substrate") + 
+  labs(title = "recovery", x = expression(Log[10]("Oxygen diffusivity")), y = "Concentration", color = "") +
+  my_theme
+int_b <- plot_trajectory_symmetry(res = int_res, trajectory = "collapse", typ = "substrate") + 
+  labs(title = "collapse", x = expression(Log[10]("Oxygen diffusivity")), y = "", color = "") +
+  my_theme
+
+wrap_plots(int_a, int_b) + 
+  plot_layout(ncol = 2, guides = "collect") &
+  my_theme
+
+
+```
+
+```{r drivers}
+# asymmetry factor, change this to observe
+asym_factor <- 0.2 # mutliplies the extremes of the sequence, is and argument of the parameter set
+
+# define prerequesites
+time <- seq(0, 100, length = 300) # times series
+diffusivity <- seq(-2, 0, length = 300)
+axis <- mean(diffusivity)
+
+# calculate diff2
+delta <- abs(axis - min(diffusivity)) * asym_factor
+under <- axis - delta
+upper <- axis + delta
+diffusivity2 <- 2*axis - (seq(under, upper, length = length(diffusivity))) # formula
+
+plt.df <- data.frame(value = c(diffusivity, diffusivity2), 
+                     key = rep(c("Oxygen diffusivity", "Sulfur diffusivity"), each = 300), 
+                     time = rep(time, times = 2))
+
+ggplot(data = plt.df %>%  filter(key == "Oxygen diffusivity")) + 
+  geom_line(aes(x = time, y = value, color = key)) + 
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  # geom_hline(aes(yintercept = axis, color = "sym axis"), linetype = "dashed") + 
+  labs(x = "Time", y = "", color = "") + 
+  theme_bw()
+
+ggplot(data = plt.df) + 
+  geom_line(aes(x = time, y = value, color = key)) + 
+  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  # geom_hline(aes(yintercept = axis, color = "sym axis"), linetype = "dashed") + 
+  labs(x = "Time", y = "", color = "") + 
+  theme_bw()
+```
+
+```{r asym_trait_dyn, fig.height=7, fig.width=7}
+# point to directory from project
+wd <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06"
+
+# figure 4 a) 
+# symmetric case
+sym_res <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym1.RDS")) # file.path(wd, "simulation_symmetric_temporal.RDS")
+fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate") +
+  labs(title = "recovery", color = "")
+fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate") +
+  labs(title = "collapse", color = "")
+# trait asym
+asym_res_trait <- readRDS(file.path(wd, "simulation_asymmetric_hOSB30.RDS"))
+fig_4c <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "recovery", typ = "substrate") +
+  labs(title = "", color = "")
+fig_4d <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "collapse", typ = "substrate") +
+  labs(title = "", color = "")
+
+
+
+wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d) +
+  plot_layout(ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = 'A') & 
+  my_theme &
+  theme(plot.tag = element_text(margin = margin(0,0,-10,0)))
+```
+
+
+```{r asym_stressor_dyn, fig.height=7, fig.width=7}
+# point to directory from project
+wd <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06"
+
+# figure 4 a) 
+# symmetric case
+sym_res <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym1.RDS")) # file.path(wd, "simulation_symmetric_temporal.RDS")
+fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate") +
+  labs(title = "recovery", color = "")
+fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate") + 
+  labs(title = "collapse", color = "")
+
+# stressor asym
+asym_res_stressor <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym0.2.RDS"))
+fig_4e <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "recovery", typ = "substrate") + 
+  labs(title = "", color = "")
+fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collapse", typ = "substrate") + 
+  labs(title = "", color = "")
+# fig_4 <- ggarrange(fig_4a, fig_4b, fig_4c, fig_4d, fig_4e, fig_4f, nrow = 4, ncol = 2)
+# plot <- (fig_4a | fig_4b) / (fig_4c | fig_4d) / (fig_4e | fig_4f)
+
+wrap_plots(fig_4a, fig_4b, fig_4e, fig_4f) +
+  plot_layout(ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = 'A') & 
+  my_theme &
+  theme(plot.tag = element_text(margin = margin(0,0,-10,0)))
+```
+
+```{r compare_bush_trait, fig.height=7, fig.width=7}
+wrap_plots(bush_a, bush_b, fig_4c + labs(title = "", color = ""), fig_4d + labs(title = "", color = "")) +
+  plot_layout(ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = 'A') & 
+  my_theme &
+  theme(plot.tag = element_text(margin = margin(0,0,-10,0)))
+```
+
+
+```{r complete_Sym}
+wrap_plots(fig_4a, fig_4b) +
+  plot_layout(ncol = 2, guides = "collect") &
+  my_theme
+```
+
+
+```{r}
+source("analysis_scripts/asymmetric_response_plotting.R")
+```
+
+
+```{r shift_extents}
+plist_h0SB <- plot_asymmetric_response(asym_measures, "hOSB", pprint = F) 
+plist_stressor <- plot_asymmetric_response(asym_measures, "stressor", pprint = F)
+
+plist_h0SB[[5]] + 
+  labs(x = "Difference to h0SB of CB", y = "Shift magnitude", title = "", color = "Shift to:") + 
+  theme_bw()
+plist_stressor[[5]] + 
+    labs(x = "Difference to asymmetry factor of 1", y = "Shift magnitude", title = "", color = "Shift to: ") + 
+  theme_bw()
+```
+
