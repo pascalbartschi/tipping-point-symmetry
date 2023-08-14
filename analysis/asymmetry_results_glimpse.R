@@ -1,8 +1,9 @@
-#to manually explore the each of the results
+# to manually explore s specific simulation of the results
+
 source("analysis_scripts/read_microxanox.R")
 
 # file to glimpse 
-file <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06/simulation_asymmetric_stressor.asym1.RDS"
+file <- "data/asymmetric-sim/stressor-asym/simulation_asymmetric_stressor.asym0.2.RDS"
 
 theme_set(theme_bw())
 

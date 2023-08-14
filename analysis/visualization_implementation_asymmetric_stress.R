@@ -21,7 +21,7 @@ plt.df <- data.frame(value = c(diffusivity, diffusivity2),
 
 ggplot(data = plt.df) + 
   geom_line(aes(x = time, y = value, color = key)) + 
-  scale_color_manual(values = c("#00BD54", "#FF0000")) +
+  scale_color_manual(values = c("#e85050", "#5da1df")) +
   # geom_hline(aes(yintercept = axis, color = "sym axis"), linetype = "dashed") + 
   labs(x = "Time", y = "", color = "") + 
   theme_bw()

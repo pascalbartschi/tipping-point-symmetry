@@ -1,5 +1,5 @@
 # import the analysis 
-source("analysis_scripts/asymmetric_response_analysis.R")
+source("analysis/asymmetric_response_analysis.R")
 
 # set the theme
 # 

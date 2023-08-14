@@ -1,16 +1,14 @@
-# this script aims to visualize asymmetric response as a function of assymmetric conditions/ traits
+# This script aims to visualize asymmetric response as a function of assymmetric conditions/ traits
 
 # load the packages
 source("simulation_scripts/read_microxanox.R")
 
-# specifiy folder
-wt <- 1e6
-path <- paste0("simulation_scripts/asymmetry_experiments_RDS_wt", wt, "/")
+
 # extract files matching pattern
 files = list()
-files$gmaxS <- list.files(path = path, pattern = "*gmaxS*")
-files$hOSB <- list.files(path = path, pattern = "*hOSB*")
-files$stressor <- list.files(path = path, pattern = "*stressor*")
+files$gmaxS <- list.files(path = "data/asymmetric-sim/trait-asym/", pattern = "*gmaxSB*")
+files$hOSB <- list.files(path = "data/asymmetric-sim/trait-asym/", pattern = "*hOSB*")
+files$stressor <- list.files(path = "data/asymmetric-sim/stressor-asym/", pattern = "*stressor*")
 
 columns <-  c("species", "species_type", "shift", "shift_type", "hyst_area", "asym_val", "shift_sym", "hyst_area_sym", "sym_val")
 asym_measures <- lapply(files, function(f) {
@@ -21,7 +19,7 @@ species_names <- c("CB", "SB", "SR", "O")
 nrowlen <- length(species_names) * 2
 
 # laod symmetric simulation
-baseline <- readRDS(paste0("simulation_scripts/experiments_RDS_wt", wt, "/simulation_symmetric_temporal.RDS"))
+baseline <- readRDS("data/symmetric-sim/simulation_symmetric_temporal.RDS")
 bm <- get_symmetry_measures(baseline)
 baseline_h_O_SB <- 100
 baseline_gmaxSB <- 0.1
