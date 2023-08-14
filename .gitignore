@@ -5,7 +5,8 @@
 figures
 .DS_Store
 .DS_Store
-analysis/resentation_figures
+presentation_figures
+analysis/presentation_figures
 experiments/experiments_RDS_wt100
 experiments/asymmetry_experiments_RDS_wt100
 experiments/experiments_RDS_wt1e+06
