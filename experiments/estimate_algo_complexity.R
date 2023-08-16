@@ -13,7 +13,7 @@ for (wt in wts){
   wait_time <- wt
   source("experiments/setup_sym_experiment_temporal.R")
   a <- Sys.time()
-  run_temporal_ssfind_symmetric(parameter)
+  print(run_temporal_ssfind_symmetric(parameter))
   b <- Sys.time()
   times[c] <- b - a
   

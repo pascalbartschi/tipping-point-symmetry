@@ -27,7 +27,7 @@ source("experiments/setup_sym_experiment_temporal.R")
 asym_factors <- seq(0, 2, by = 0.2)
 parameter$log10a_series <- seq(-2, 0,length = 300)
 for (asym_f in asym_factors){
-  parameter <- update_asym_factor(parameter, asym_f)
+  parameter <- set_diffusivities(parameter, asym_f)
   temp_res <- run_temporal_ssfind_symmetric(parameter)
   saveRDS(temp_res, paste0(folder_path, "/simulation_asymmetric_stressor.asym", asym_f, ".RDS"))
   rm(temp_res)

@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.path = "../../symmetry_hysteresis_manuscript/figures/", dpi = 360)
+knitr::opts_chunk$set(echo = TRUE, fig.path = "figures/", dpi = 360)
 ```
 
 ```{r include=FALSE}
@@ -14,8 +14,11 @@ library(extrafont)
 loadfonts(dev = "win")
 ```
 
+```{r include = FALSE}
+if (!dir.exists("publication_figures")){dir.create("figures")}
+```
 
-```{r}
+```{r include=FALSE}
 # read the package manually
 source("analysis/read_microxanox.R")
 library(patchwork)
@@ -55,9 +58,9 @@ my_theme <-  theme(text = element_text(size = 7),
 
 ### Figure 1
 
-```{r figure_1cd, fig.width=5, fig.height=5}
+```{r figure_1cd, echo=FALSE, fig.height=5, fig.width=5}
 # point to directory from project
-wd <- "simulation_scripts/experiments_RDS_wt1e+06"
+wd <- "data/bush-sim"
 # figure 1c, d: asymmetry in magnitudes in bush simulation
 bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
 fig_1a <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver", y = "Concentration") + my_theme
@@ -75,7 +78,7 @@ wrap_plots(fig_1a, fig_1b, fig_1c, fig_1d) +
 
 ### Figure 3
 
-```{r figure_3, fig.width=5, fig.height = 5}
+```{r figure_3, echo = FALSE, fig.width=5, fig.height = 5}
 
 # figure 3: dynamics
 dyn_res <- readRDS(file.path("data", "symmetric-sim" , "simulation_time_dynamics_symmetric.RDS" ))
@@ -129,21 +132,21 @@ wrap_plots(fig3a, fig3b, fig3c) +
 
 ### Figure 4
 
-```{r figure_4, fig.width = 5, fig.height=7.5}
+```{r figure_4, echo = FALSE, fig.width = 5, fig.height=7.5}
 # point to directory from project
-wd <- "simulation_scripts/asymmetry_experiments_RDS_wt1e+06"
+wd <- "data"
 
 # figure 4 a) 
 # symmetric case
-sym_res <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym1.RDS"))
+sym_res <- readRDS(file.path("data", "asymmetric-sim", "stressor-asym", "simulation_asymmetric_stressor.asym1.RDS"))
 fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate")
 fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate")
 # trait asym
-asym_res_trait <- readRDS(file.path(wd, "simulation_asymmetric_hOSB60.RDS"))
+asym_res_trait <- readRDS(file.path("data","asymmetric-sim", "trait-asym", "simulation_asymmetric_hOSB60.RDS"))
 fig_4c <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "recovery", typ = "substrate")
 fig_4d <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "collapse", typ = "substrate")
 # stressor asym
-asym_res_stressor <- readRDS(file.path(wd, "simulation_asymmetric_stressor.asym0.6.RDS"))
+asym_res_stressor <-readRDS(file.path("data", "asymmetric-sim", "stressor-asym", "simulation_asymmetric_stressor.asym0.6.RDS"))
 fig_4e <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "recovery", typ = "substrate")
 fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collapse", typ = "substrate")
 # fig_4 <- ggarrange(fig_4a, fig_4b, fig_4c, fig_4d, fig_4e, fig_4f, nrow = 4, ncol = 2)
@@ -158,11 +161,11 @@ wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d, fig_4e, fig_4f) +
 
 ### Figure 5
 
-```{r}
+```{r include=FALSE, warnings=FALSE}
 source("analysis/asymmetric_response_plotting.R")
 ```
 
-```{r figure_5, fig.width = 7, fig.height=7}
+```{r figure_5, echo = FALSE,  fig.width = 7, fig.height=7}
 plist_h0SB <- plot_asymmetric_response(asym_measures, "hOSB", pprint = F)
 plist_stressor <- plot_asymmetric_response(asym_measures, "stressor", pprint = F)
 

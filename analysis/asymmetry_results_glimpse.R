@@ -3,7 +3,7 @@
 source("analysis_scripts/read_microxanox.R")
 
 # file to glimpse 
-file <- "data/asymmetric-sim/stressor-asym/simulation_asymmetric_stressor.asym0.2.RDS"
+file <- "data/asymmetric-sim/stressor-asym/simulation_asymmetric_stressor.asym0.2.RDS" # look at some file here
 
 theme_set(theme_bw())
 

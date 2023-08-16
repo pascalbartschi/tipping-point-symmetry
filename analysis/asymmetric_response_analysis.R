@@ -1,14 +1,16 @@
 # This script aims to visualize asymmetric response as a function of assymmetric conditions/ traits
 
 # load the packages
-source("simulation_scripts/read_microxanox.R")
+source("experiments/read_microxanox.R")
 
+paths = c("data/asymmetric-sim/trait-asym/",  "data/asymmetric-sim/stressor-asym/", "data/asymmetric-sim/trait-asym/") 
 
 # extract files matching pattern
 files = list()
-files$gmaxS <- list.files(path = "data/asymmetric-sim/trait-asym/", pattern = "*gmaxSB*")
-files$hOSB <- list.files(path = "data/asymmetric-sim/trait-asym/", pattern = "*hOSB*")
-files$stressor <- list.files(path = "data/asymmetric-sim/stressor-asym/", pattern = "*stressor*")
+
+files$hOSB <- list.files(path = paths[1], pattern = "*hOSB*")
+files$stressor <- list.files(path = paths[2], pattern = "*stressor*")
+# files$gmaxS <- list.files(path = "data/asymmetric-sim/trait-asym/", pattern = "*gmaxSB*") # these files must be requested, as they are gitignored!
 
 columns <-  c("species", "species_type", "shift", "shift_type", "hyst_area", "asym_val", "shift_sym", "hyst_area_sym", "sym_val")
 asym_measures <- lapply(files, function(f) {
@@ -20,18 +22,19 @@ nrowlen <- length(species_names) * 2
 
 # laod symmetric simulation
 baseline <- readRDS("data/symmetric-sim/simulation_symmetric_temporal.RDS")
-bm <- get_symmetry_measures(baseline)
+bm <- get_symmetry_measurements(baseline)
 baseline_h_O_SB <- 100
 baseline_gmaxSB <- 0.1
 baseline_asym_factor <- 1
-baseline_vals <- c(baseline_gmaxSB, baseline_h_O_SB, baseline_asym_factor)
+baseline_vals <- c(baseline_h_O_SB, baseline_asym_factor, baseline_gmaxSB)
 
 
 for (i in 1:length(files)) {
   # name columns
   colnames(asym_measures[[i]]) <- columns
   for (filename in files[[i]]){
-    tm <- get_symmetry_measures(readRDS(paste0(path, filename)))
+    # print(paste("Analysed:", filename))
+    tm <- get_symmetry_measurements(readRDS(paste0(paths[i], filename)))
     newrows <- data.frame("species" = rep(species_names, times = nrowlen/4),
                           "species_type" = rep(c("bacteria", "bacteria", "substrate", "substrate"), times = nrowlen/4),
                           "shift" = c(tm$abs_shift_recovery[1:(nrowlen/2)], tm$abs_shift_catastrophy[1:(nrowlen/2)]), 
