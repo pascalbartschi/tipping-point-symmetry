@@ -70,10 +70,12 @@ plot_asymmetric_response <- function(asym_measures,
                                   anox_TP_delta = "anoxic-oxic",
                                   ox_TP_delta = "oxic-anoxic",
                                   combined_dir = "combined")) %>% 
+    filter(delta_TP_type != "combined") %>% 
     ggplot() + 
     geom_point(aes(x = asym_val, y = delta_TP_value, color = delta_TP_type), size = sz) + 
     geom_point(aes(x = sym_val, y = 0), size = sz, color = "#7E3C2F") +
-    scale_color_manual(values = c("#e85050", "#cacbce", "#5da1df")) +
+    scale_color_manual(values = c("#e85050", "#5da1df")) +
+    # scale_color_manual(values = c("#e85050", "#cacbce", "#5da1df")) +
     labs(title = paste("SB", subject, "TP delta"), x = paste("Delta", subject, "values"))
   
   # measurement for total shift for one direction of environmental change

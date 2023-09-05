@@ -15,7 +15,7 @@ loadfonts(dev = "win")
 ```
 
 ```{r include = FALSE}
-if (!dir.exists("publication_figures")){dir.create("figures")}
+if (!dir.exists("publication_figures")){dir.create("publication_figures")}
 ```
 
 ```{r include=FALSE}
@@ -30,18 +30,18 @@ my_theme <-  theme(text = element_text(size = 7),
         title = element_blank(),
         # axis.ticks.x = element_blank(),
         # axis.ticks.y = element_blank(),
-        axis.text = element_text(size = 7, family = "Calibri"),
-        axis.title.x = element_text(
-          size = 8,
-          margin = margin(t = 10)
-        ),
+        # axis.text = element_text(size = 7, family = "Calibri"),
+        # axis.title.x = element_text(
+        #   size = 8,
+        #   margin = margin(t = 3)
+        # ),
         axis.title.y = element_text(
           size = 8,
-          margin = margin(t = 10)
+          margin = margin(t = 0, r = 3)
         ),
         axis.title.x.top = element_text(
           size = 8,
-          margin = margin(t = 10)
+          margin = margin(b = 3)
         ),
         # axis.text.y = element_blank(),
         panel.background = element_blank(),
@@ -49,7 +49,7 @@ my_theme <-  theme(text = element_text(size = 7),
                                                       ends = "both")),
         axis.line.y = element_line(arrow = grid::arrow(length = unit(0.2, "cm"),
                                                        ends = "last")),
-        plot.tag = element_text(size = 10, face = "bold", margin = margin(0, 0, -5, -10)),
+        plot.tag = element_text(size = 10, face = "bold", margin = margin(0, 3, -5, -10)),
         legend.position = "bottom",
         legend.direction = 'horizontal'
         ) 
@@ -63,16 +63,18 @@ my_theme <-  theme(text = element_text(size = 7),
 wd <- "data/bush-sim"
 # figure 1c, d: asymmetry in magnitudes in bush simulation
 bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
-fig_1a <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver", y = "Concentration") + my_theme
-fig_1b <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver") + my_theme
-fig_1c <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") + my_theme
-fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + labs(y = "") + my_theme
+fig_1a <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver", y = "Concentration")
+fig_1b <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver")
+fig_1c <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") # + 
+  # labs(y = paste(expression(Log[10](Concentration)), "[μM]"))
+fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + labs(y = "")
 # (fig_1a | fig_1b) / (fig_1c | fig_1d) 
 wrap_plots(fig_1a, fig_1b, fig_1c, fig_1d) +
   plot_layout(ncol = 2, guide = "collect") + 
   guides(color = guide_legend(position = "bottom")) + 
   plot_annotation(tag_levels = "a") & 
-  my_theme
+  my_theme & 
+  theme(axis.title.x = element_text(size = 8, margin = margin(t=3)))
 
 ```
 
@@ -87,7 +89,7 @@ starting <- which(dyn_res$result$aO == 0)[1]
 # recode for proper legends
 
 df3 <- dyn_res$result %>% 
-  slice(starting:nrow(.)) %>% 
+  # slice(starting:nrow(.)) %>% 
   dplyr::select(c(O, aO, aS, time, SR, P)) %>%
   mutate_at(c("O", "SR", "P"), log10) %>%
   gather(key = species, value = concentration, -time) %>%
@@ -104,28 +106,31 @@ df3 <- dyn_res$result %>%
 
 fig3a<- ggplot(data = df3 %>% filter(panel == "diffusivities"), 
                mapping = aes(x = time, y = concentration, color = species_plot)) + 
-          labs(x  = "Time", y = "Concentration") +
+          labs(x  = "Time", y = "Diffusivity") +
           geom_path(linetype = "dashed") + 
-          scale_color_manual(values = c("#e85050", "#5da1df"))
+          scale_color_manual(values = c("#e85050", "#5da1df")) +
+          theme(axis.title.x = element_blank())
+
+fig3b <- ggplot(data = df3 %>% filter(panel == "substrates"), 
+                mapping = aes(x = time, y= concentration, color = species_plot)) +
+        geom_step()  +
+        labs(x  = "Time", y = "Concentration") + # [μM]
+        scale_color_manual(values = c("#e85050", "#5da1df")) +
+        theme(axis.title.x = element_blank())
 
 fig3c <- ggplot(data = df3 %>% filter(panel == "nutrient"),
                 mapping = aes(x = time, y = concentration, color = species_plot)) +
             geom_step() +
         labs(x  = "Time", y = "Concentration") +
-  scale_color_manual(values = c("#674ea7"))
-
-fig3b <- ggplot(data = df3 %>% filter(panel == "substrates"), 
-                mapping = aes(x = time, y= concentration, color = species_plot)) +
-        geom_step()  +
-   labs(x  = "Time", y = "Concentration") +
-   scale_color_manual(values = c("#e85050", "#5da1df"))
-
+        scale_color_manual(values = c("#674ea7")) + 
+        theme(axis.title.x = element_text(size = 8,
+                                          margin = margin(t=10)))
 
 wrap_plots(fig3a, fig3b, fig3c) + 
   plot_layout(ncol = 1, guide = "collect") +
   plot_annotation(tag_levels = "a") & 
   my_theme & 
-  theme(axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
+  theme(axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"),
                                                       ends = "last")))
 # todo: y axis labels, x axis label
 ```
@@ -152,11 +157,19 @@ fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collap
 # fig_4 <- ggarrange(fig_4a, fig_4b, fig_4c, fig_4d, fig_4e, fig_4f, nrow = 4, ncol = 2)
 # plot <- (fig_4a | fig_4b) / (fig_4c | fig_4d) / (fig_4e | fig_4f)
 
+# text.cd = textGrob("")
+# text.ef = textGrob("")
+
+ # + annotation_custom(grob = text.cd,  xmin = 4, xmax = 4, ymin = -3, ymax = -3) +
+ #  annotation_custom(grob = text.ef,  xmin = 8, xmax = 8, ymin = -3, ymax = -3)
+
 wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d, fig_4e, fig_4f) +
   plot_layout(ncol = 2, guides = "collect") +
   plot_annotation(tag_levels = 'a') & 
   my_theme &
-  theme(plot.tag = element_text(margin = margin(0,0,-10,0)))
+  theme(plot.tag = element_text(margin = margin(0,0,-10,0)), 
+        axis.title.x = element_text(size = 8, margin = margin(t=3)))
+
 ```
 
 ### Figure 5
