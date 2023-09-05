@@ -2,7 +2,7 @@
 ### Repository and reproduction guidance
 
 This repository holds the scripts used to run experiments, the resulting data  and complementary analysis of asymmetric result to understand and
-reproduce the research presented in the paper: ______________. To comprehend the functions used for experiments and visualization please conduct the
+reproduce the research presented in the paper "[Reflecting on the symmetry of ecosystem tipping points. The influence of trait dissimilarity and environmental driver dynamics in a simple ecosystem model.](www.dummy.com)". To comprehend the functions used for experiments and visualization please conduct the
 [user-guide](www.dummy-link.com) explaining functions implemented into the [microxanox package](https://github.com/UZH-PEG/microxanox).
 
 The directories hold the following:
