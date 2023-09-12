@@ -22,6 +22,7 @@ if (!dir.exists("publication_figures")){dir.create("publication_figures")}
 # read the package manually
 source("analysis/read_microxanox.R")
 library(patchwork)
+library(ggpubr)
 
 # set the theme such that all figures look the same
 # theme_set(
@@ -35,14 +36,8 @@ my_theme <-  theme(text = element_text(size = 7),
         #   size = 8,
         #   margin = margin(t = 3)
         # ),
-        axis.title.y = element_text(
-          size = 8,
-          margin = margin(t = 0, r = 3)
-        ),
-        axis.title.x.top = element_text(
-          size = 8,
-          margin = margin(b = 3)
-        ),
+        axis.title.y = element_blank(),
+        axis.title.x.top = element_blank(),
         # axis.text.y = element_blank(),
         panel.background = element_blank(),
         axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"), 
@@ -56,6 +51,11 @@ my_theme <-  theme(text = element_text(size = 7),
 # )
 ```
 
+### ToDo
+
+* readability of code
+* make variables for things like text size and margins
+
 ### Figure 1
 
 ```{r figure_1cd, echo=FALSE, fig.height=5, fig.width=5}
@@ -63,24 +63,43 @@ my_theme <-  theme(text = element_text(size = 7),
 wd <- "data/bush-sim"
 # figure 1c, d: asymmetry in magnitudes in bush simulation
 bush_res <- readRDS(file.path(wd, "simulation_bush_temporal.RDS"))
-fig_1a <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver", y = "Concentration")
-fig_1b <- ggplot() + theme(panel.background = element_blank()) + labs(x = "Environmental driver")
-fig_1c <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") # + 
-  # labs(y = paste(expression(Log[10](Concentration)), "[μM]"))
-fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + labs(y = "")
+
+fig_1a <- ggplot() + theme(panel.background = element_blank()) + 
+  labs(x = "Environmental driver", y = "Concentration") + 
+  my_theme + 
+  theme(axis.title.y = element_text(size = 8, margin = margin(t = 0, r = 3)))
+
+fig_1b <- ggplot() + theme(panel.background = element_blank()) + 
+  labs(x = "Environmental driver") + 
+  my_theme
+
+fig_1c <- plot_trajectory_symmetry(res = bush_res, trajectory = "recovery", typ = "substrate") + 
+  labs(y = expression(Log[10](Concentration)~"[μM]"), x = expression(Log[10](Oxygen~Diffusivity)~"["*hr^-1*"]")) +
+  my_theme +
+  theme(axis.title.y = element_text(size = 8, margin = margin(t = 0, r = 3)), 
+        axis.title.x = element_text(size = 8, margin = margin(t=3)))
+
+fig_1d <- plot_trajectory_symmetry(res = bush_res, trajectory = "collapse", typ = "substrate") + 
+  labs(x = expression(Log[10](Oxygen~Diffusivity)~"["*hr^-1*"]")) + 
+  my_theme + 
+  theme(axis.title.x = element_text(size = 8, margin = margin(t=3)))
+
+
+# it needs a patchwork theme as well as a theme for the plots
 # (fig_1a | fig_1b) / (fig_1c | fig_1d) 
 wrap_plots(fig_1a, fig_1b, fig_1c, fig_1d) +
-  plot_layout(ncol = 2, guide = "collect") + 
-  guides(color = guide_legend(position = "bottom")) + 
-  plot_annotation(tag_levels = "a") & 
-  my_theme & 
-  theme(axis.title.x = element_text(size = 8, margin = margin(t=3)))
+  plot_layout(ncol = 2, guide = "collect") +
+  guides(color = guide_legend(position = "bottom")) +
+  plot_annotation(tag_levels = "a") &
+  theme(legend.position = "bottom")
+
+# ggarrange(fig_1a, fig_1b, fig_1c, fig_1d, common.legend = TRUE, legend = "bottom")
 
 ```
 
 ### Figure 3
 
-```{r figure_3, echo = FALSE, fig.width=5, fig.height = 5}
+```{r figure_3, echo = FALSE, fig.width=7, fig.height = 7}
 
 # figure 3: dynamics
 dyn_res <- readRDS(file.path("data", "symmetric-sim" , "simulation_time_dynamics_symmetric.RDS" ))
@@ -106,7 +125,7 @@ df3 <- dyn_res$result %>%
 
 fig3a<- ggplot(data = df3 %>% filter(panel == "diffusivities"), 
                mapping = aes(x = time, y = concentration, color = species_plot)) + 
-          labs(x  = "Time", y = "Diffusivity") +
+          labs(x = "", y = expression(Log[10](Diffusivity)~"["*hr^-1*"]")) +
           geom_path(linetype = "dashed") + 
           scale_color_manual(values = c("#e85050", "#5da1df")) +
           theme(axis.title.x = element_blank())
@@ -114,14 +133,14 @@ fig3a<- ggplot(data = df3 %>% filter(panel == "diffusivities"),
 fig3b <- ggplot(data = df3 %>% filter(panel == "substrates"), 
                 mapping = aes(x = time, y= concentration, color = species_plot)) +
         geom_step()  +
-        labs(x  = "Time", y = "Concentration") + # [μM]
+        labs(x = "", y = expression(Log[10](Concentration)~"[μM]")) + # [μM]
         scale_color_manual(values = c("#e85050", "#5da1df")) +
         theme(axis.title.x = element_blank())
 
 fig3c <- ggplot(data = df3 %>% filter(panel == "nutrient"),
                 mapping = aes(x = time, y = concentration, color = species_plot)) +
             geom_step() +
-        labs(x  = "Time", y = "Concentration") +
+        labs(x  = "Time [hr]", y = expression(Log[10](Concentration)~"[μM]")) +
         scale_color_manual(values = c("#674ea7")) + 
         theme(axis.title.x = element_text(size = 8,
                                           margin = margin(t=10)))
@@ -131,7 +150,9 @@ wrap_plots(fig3a, fig3b, fig3c) +
   plot_annotation(tag_levels = "a") & 
   my_theme & 
   theme(axis.line.x = element_line(arrow = grid::arrow(length = unit(0.2, "cm"),
-                                                      ends = "last")))
+                                                      ends = "last")), 
+        axis.title.y = element_text(size = 8, margin = margin(t = 0, r = 3))
+        )
 # todo: y axis labels, x axis label
 ```
 
@@ -144,16 +165,33 @@ wd <- "data"
 # figure 4 a) 
 # symmetric case
 sym_res <- readRDS(file.path("data", "asymmetric-sim", "stressor-asym", "simulation_asymmetric_stressor.asym1.RDS"))
-fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate")
-fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate")
+fig_4a <- plot_trajectory_symmetry(res = sym_res, trajectory = "recovery", typ = "substrate") + 
+  my_theme +
+  theme(axis.title.x.top = element_text(size = 8, margin = margin(b = 3)), 
+        axis.title.y = element_text(size = 8, margin = margin(t = 0, r = 3)))
+
+fig_4b <- plot_trajectory_symmetry(res = sym_res, trajectory = "collapse", typ = "substrate") + 
+  my_theme +
+  theme(axis.title.x.top = element_text(size = 8, margin = margin(b = 3)))
+
 # trait asym
 asym_res_trait <- readRDS(file.path("data","asymmetric-sim", "trait-asym", "simulation_asymmetric_hOSB60.RDS"))
-fig_4c <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "recovery", typ = "substrate")
-fig_4d <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "collapse", typ = "substrate")
+fig_4c <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "recovery", typ = "substrate") +
+  my_theme +
+  theme(axis.title.y = element_text(size = 8, margin = margin(t = 0, r = 3)))
+fig_4d <- plot_trajectory_symmetry(res = asym_res_trait, trajectory = "collapse", typ = "substrate") + 
+  my_theme
+
 # stressor asym
 asym_res_stressor <-readRDS(file.path("data", "asymmetric-sim", "stressor-asym", "simulation_asymmetric_stressor.asym0.6.RDS"))
-fig_4e <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "recovery", typ = "substrate")
-fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collapse", typ = "substrate")
+fig_4e <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "recovery", typ = "substrate") +
+  my_theme + 
+  theme(axis.title.x = element_text(size = 8, margin = margin(t=3)), 
+        axis.title.y = element_text(size = 8, margin = margin(t = 0, r = 3)))
+
+fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collapse", typ = "substrate") +
+  my_theme + 
+  theme(axis.title.x = element_text(size = 8, margin = margin(t=3)))
 # fig_4 <- ggarrange(fig_4a, fig_4b, fig_4c, fig_4d, fig_4e, fig_4f, nrow = 4, ncol = 2)
 # plot <- (fig_4a | fig_4b) / (fig_4c | fig_4d) / (fig_4e | fig_4f)
 
@@ -165,10 +203,9 @@ fig_4f <- plot_trajectory_symmetry(res = asym_res_stressor, trajectory = "collap
 
 wrap_plots(fig_4a, fig_4b, fig_4c,  fig_4d, fig_4e, fig_4f) +
   plot_layout(ncol = 2, guides = "collect") +
-  plot_annotation(tag_levels = 'a') & 
-  my_theme &
+  plot_annotation(tag_levels = 'a') &
   theme(plot.tag = element_text(margin = margin(0,0,-10,0)), 
-        axis.title.x = element_text(size = 8, margin = margin(t=3)))
+        legend.position = "bottom")
 
 ```
 
