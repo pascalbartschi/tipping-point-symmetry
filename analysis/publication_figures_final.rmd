@@ -196,11 +196,9 @@ wrap_plots(fig_4a, fig_4b, fig_4c) +
 
 ### Figure 5
 
-```{r include=FALSE, warnings=FALSE}
-source("analysis/asymmetric_response_plotting.R")
-```
-
 ```{r figure_5, echo = FALSE,  fig.width = 7, fig.height=7}
+source("analysis/asymmetric_response_plotting.R")
+
 plist_h0SB <- plot_asymmetric_response(asym_measures, "hOSB", pprint = F)
 plist_stressor <- plot_asymmetric_response(asym_measures, "stressor", pprint = F)
 
@@ -226,7 +224,7 @@ fig5b <- plist_stressor[[5]] + labs(x = "Stressor asymmetry factor", y = "Shift 
         axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         legend.title =  element_text(),
-        legend.position = c(0.8, 0.8),
+        legend.position = c(0.78, 0.82),
         legend.direction = 'vertical', 
         plot.title = element_blank())
 
