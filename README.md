@@ -1,4 +1,4 @@
-# Reflecting on the symmetry of tipping points <img src="img/data_large_color.png" alt="Data Image" width="100" align = "right" />  <img src="img/materials_large_color.png" alt="Materials Image" width="100" align="right" />
+# Symmetry of ecosystem tipping points <img src="img/data_large_color.png" alt="Data Image" width="100" align = "right" />  <img src="img/materials_large_color.png" alt="Materials Image" width="100" align="right" />
 
 
 ## About
