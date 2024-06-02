@@ -1,15 +1,17 @@
+# Symmetry of ecosystem tipping points <img src="img/data_large_color.png" alt="Data Image" width="100" align = "right" />  <img src="img/materials_large_color.png" alt="Materials Image" width="100" align="right" />
 
-# About
+
+## About
 
 This repository holds the scripts used to run experiments, the resulting data  and complementary analysis of asymmetric result to understand and
-reproduce the research presented in the paper: "[Reflecting on the symmetry of ecosystem tipping points. The influence of trait dissimilarity and environmental driver dynamics in a simple ecosystem model.](link)". 
+reproduce the research presented in the paper: "[Reflecting on the symmetry of ecosystem tipping points. The influence of trait dissimilarity and environmental driver dynamics in a simple ecosystem model.](https://doi.org/10.1002/ece3.11421)". 
 
-# Documentation
+## Documentation
 
 This [user guide](https://uzh-peg.r-universe.dev/articles/microxanox/SymSys-User-guide.html) explains functionalities to simulate, analyse and visulualize experiments for this project. 
 
 
-# Installation
+## Installation
 
 The latter funcionalities have been implemented in the [microxanox package](https://github.com/UZH-PEG/microxanox) and are available in package version [0.9.3](https://zenodo.org/records/10119025) or newer.
 
@@ -19,7 +21,7 @@ It is best installed through the r-unviverse:
 install.packages('microxanox', repos = c('https://uzh-peg.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
-# Contents
+## Contents
 
 ### [analysis](analysis/)
 
