@@ -1,5 +1,5 @@
 
-# Reflecting on the symmetry of ecosystem tipping points <img src="img/data_large_color.png" alt="Open Data" width="50" height="50" style="float: right; margin-left: 10px;"> <img src="img/materials_large_color.png" alt="Open Materials" width="50" height="50" style="float: right; margin-left: 10px;">
+# Reflecting on the symmetry<br>of ecosystem tipping points <img src="img/data_large_color.png" alt="Open Data" width="200" height="200" style="float: right; margin-left: 10px;"> <img src="img/materials_large_color.png" alt="Open Materials" width="200" height="200" style="float: right; margin-left: 10px;">
 
 ## About
 
