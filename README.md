@@ -1,26 +1,5 @@
 
-# About
-
-<div align="right">
-    <iframe src="https://mfr.osf.io/render?url=https://osf.io/download/hr67w/?direct%26mode=render"
-        width="49%"
-        scrolling="yes"
-        height="100px"
-        marginheight="0"
-        frameborder="0"
-        allowfullscreen
-        webkitallowfullscreen
-    ></iframe>
-    <iframe src="https://mfr.osf.io/render?url=https://osf.io/download/hr67w/?direct%26mode=render"
-        width="49%"
-        scrolling="yes"
-        height="100px"
-        marginheight="0"
-        frameborder="0"
-        allowfullscreen
-        webkitallowfullscreen
-    ></iframe>
-</div>
+# About ![Badge](https://mfr.osf.io/render?url=https://osf.io/download/hr67w/?direct%26mode=render)
 
 
 This repository holds the scripts used to run experiments, the resulting data  and complementary analysis of asymmetric result to understand and
