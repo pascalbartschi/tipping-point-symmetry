@@ -4,7 +4,7 @@
 ## About
 
 This repository holds the scripts used to run experiments, the resulting data  and complementary analysis of asymmetric result to understand and
-reproduce the research presented in the paper: "[Reflecting on the symmetry of ecosystem tipping points. The influence of trait dissimilarity and environmental driver dynamics in a simple ecosystem model.](https://doi.org/10.1002/ece3.11421)". 
+reproduce the research presented in the paper: "[Reflecting on the symmetry of ecosystem tipping points: The influence of trait dissimilarity and environmental driver dynamics in a simple ecosystem model.](https://doi.org/10.1002/ece3.11421)". 
 
 ## Documentation
 
