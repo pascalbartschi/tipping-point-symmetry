@@ -27,8 +27,8 @@ library(patchwork)
 library(ggpubr)
 
 # globals
-textsize <- 8
-tagsize <- 10
+textsize <- 10
+tagsize <- 14
 margin.r <- 3
 margin.l <- 3
 margin.t <- 3
